@@ -1,50 +1,50 @@
 ---
 layout: post
-title: Java Web学习笔记
+title: java Web学习笔记
 ---
 
 # Servlet
-* 一个servlet就是一个Java类，并提供基于请求-响应模式的Web服务
+* 一个servlet就是一个java类，并提供基于请求-响应模式的Web服务
 * Servlet容器是一个服务端程序负责装载和管理Servlet
 * Servlet的生命周期：
-** Init方法: 在第一次启动Servlet时或Servlet容器启动时（load-on-start-up配置）被调用
-** Service以及HTTP的方法：Servlet响应客户端的请求时调用
-** destroy方法：Servlet被销毁（停止Servlet所在的Web应用）之前调用
+  * Init方法: 在第一次启动Servlet时或Servlet容器启动时（load-on-start-up配置）被调用
+  * Service以及HTTP的方法：Servlet响应客户端的请求时调用
+  * destroy方法：Servlet被销毁（停止Servlet所在的Web应用）之前调用
 
 ## 配置信息
 ### ServletConfig
-```XML
+```xml
 <init-param>
     <param-name>data_1</param-name>
     <param-value>value_1</param-value>
 </init-param>
 ```
 
-```Java
+```java
 ServletConfig config = this.getServletConfig();
 String v1 = config.getInitParameter("data_1");
 ```
-** Servlet初始化过程中，`<init-param>`参数将会被封装到ServletConfig
-** 每个Servlet支持设置一个或者多个`<init-param>`
-** 它不是全局共享
+* Servlet初始化过程中，`<init-param>`参数将会被封装到ServletConfig
+  * 每个Servlet支持设置一个或者多个`<init-param>`
+  * 它不是全局共享
 
 ### ServletContext
 * Servlet容器启动时会为每个Web应用初始化一个ServletContext，它在该Web应用中全局唯一
 
-```XML
+```xml
 <context-param>
     <param-name>global_1</param-name>
     <param-value>111</param-value>
 </context-param>
 ```
 
-```Java
+```java
 ServletContext ctx = this.getServletContext();
 String gv1 = ctx.getInitParameter("global_1");
 ```
 
 * Servlet之间共享信息
-```Java
+```java
 // In Servlet A
 ctx.setAttribute("attr_1", "121212");
 
@@ -54,7 +54,7 @@ String at1 = (String) ctx.getAttribute("attr_1");
 
 * 读取外部资源配置文件信息的方法`getResource`, `getResourceAsStream`, `getRealPath`
 * 配置文件放在src/main/resources文件夹里
-```Java
+```java
 try {
     URL url = ctx.getResource("/WEB-INF/classes/log4j.properties");
     InputStream in = url.openStream();
@@ -100,7 +100,7 @@ try {
 
 ### 其它
 
-```XML
+```xml
 <error-page>
     <error-code>404</error-code>
     <location>/404.html</location>
