@@ -4,6 +4,7 @@ title: PHP使用PDO
 ---
 
 ## 查询数据
+
 ```php
 // 方法1： 执行SQL语句
 $stmt = $db_conn->query('SELECT name, chef FROM recipes');
@@ -26,21 +27,25 @@ while($row = $stmt->fetch()) {
  echo $row['name'] . ' by ' . $row['chef'] . "\n";
 }
 ```
+
 ## 插入数据
+
 ```php
 $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
 $sql = 'INSERT INTO recipes (name, description, chef, created)
 	VALUES (:name, :description, :chef, NOW())';
 $stmt = $db_conn->prepare($sql);
 $stmt->execute(array(
- ':name' => 'Weekday Risotto',
- ':description' => 'Creamy rice-based dish, boosted by in-season➥
- ingredients. Otherwise known as \'raid-the-fridge risotto\'',
- ':chef' => 'Lorna')
- );
+	':name' => 'Weekday Risotto',
+	':description' => 'Creamy rice-based dish, boosted by in-season➥
+	ingredients. Otherwise known as \'raid-the-fridge risotto\'',
+	':chef' => 'Lorna')
+);
 echo "New recipe id: " . $db_conn->lastInsertId();
 ```
+
 ## 获取修改记录数目
+
 ```php
 $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
 $sql = 'UPDATE recipes SET category_id = :id
@@ -51,6 +56,7 @@ echo $stmt->rowCount() . ' rows updated';
 ```
 
 ## 删除记录
+
 ```php
 $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
 $stmt = $db_conn->prepare('DELETE FROM categories WHERE➥
@@ -61,6 +67,7 @@ echo $stmt->rowCount() . ' row(s) deleted';
 
 ## 使用PDO的过程中需要处理有可能产生的异常和错误
 除了下面的错误处理，在实际项目中有可能需要处理`fetch`产生的错误（返回`false`，更多的信息可以通过`PDOStatement::errorInf()`获取）
+
 ```php
 try {
 	$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
@@ -84,7 +91,9 @@ if($stmt) {
 	}
 }
 ```
+
 ##事务
+
 ```php
 try {
 	$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
