@@ -37,7 +37,7 @@ $sql = 'INSERT INTO recipes (name, description, chef, created)
 $stmt = $db_conn->prepare($sql);
 $stmt->execute(array(
 	':name' => 'Weekday Risotto',
-	':description' => 'Creamy rice-based dish, boosted by in-season➥
+	':description' => 'Creamy rice-based dish, boosted by in-season
 	ingredients. Otherwise known as \'raid-the-fridge risotto\'',
 	':chef' => 'Lorna')
 );
@@ -59,8 +59,7 @@ echo $stmt->rowCount() . ' rows updated';
 
 ```php
 $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
-$stmt = $db_conn->prepare('DELETE FROM categories WHERE➥
- name = :name');
+$stmt = $db_conn->prepare('DELETE FROM categories WHERE name = :name');
 $stmt->execute(array(':name' => 'Starter'));
 echo $stmt->rowCount() . ' row(s) deleted';
 ```
@@ -92,7 +91,7 @@ if($stmt) {
 }
 ```
 
-##事务
+## 事务
 
 ```php
 try {
