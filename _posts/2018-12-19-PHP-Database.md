@@ -2,6 +2,7 @@
 layout: post
 title: PHP使用PDO
 ---
+使用PDO进行数据库操作的方法。
 
 ## 查询数据
 
@@ -112,3 +113,23 @@ try {
 	echo "Something went wrong: " . $e->getMessage();
 }
 ```
+
+## Stored Procedure
+1. 在`MYSQL`里执行以下操作
+```sql
+delmiter $$
+CREATE PROCEDURE get_recipes()
+BEGIN
+ SELECT name, chef
+ FROM recipes
+ ORDER BY created DESC ;
+END $$
+delimiter ;
+```
+2. `PHP`代码
+```php
+$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+$stmt = $db_conn->query('call get_recipes()');
+$results = $stmt->fetchAll();
+```
+
