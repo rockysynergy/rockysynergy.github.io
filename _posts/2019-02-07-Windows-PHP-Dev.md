@@ -46,3 +46,5 @@ xdebug.remote_autostart=on
 ## 使用Xdebug
 1. 对于不需要考虑浏览器的调试，只需打开PHP文件然后在调试面板选择"Launch currently open script"就可以了
 2. 对于需要考虑浏览器的调试，需要使用Chrome打开页面并且选择`Debug`。相应的结果就会显示在VSCode里了。
+
+本文参考了[codewall的文章](https://www.codewall.co.uk/debug-php-in-vscode-with-xdebug/)。图片也是转自同一篇文章。
