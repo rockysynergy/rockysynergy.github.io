@@ -44,7 +44,20 @@ xdebug.remote_autostart=on
 * 有可能需要设置IDE Key。打开Chrome浏览器的Xdebug help插件配置页面，填写IDE Key。IDE Key在localhost/phpinfo.php页面的xdebug那里可以找到。
 
 ## 使用Xdebug
+### 调试
 1. 对于不需要考虑浏览器的调试，只需打开PHP文件然后在调试面板选择"Launch currently open script"就可以了
 2. 对于需要考虑浏览器的调试，需要使用Chrome打开页面并且选择`Debug`。相应的结果就会显示在VSCode里了。
+
+### Profiling
+1. 在php.ini中进行下面的配置
+```PHP
+xdebug.profiler_enable = 0
+xdebug.profiler_output_name = xdebug.out.%t
+xdebug.profiler_output_dir = /tmp
+xdebug.profiler_enable_trigger = 1
+```
+2. 下载并安装[webgrind](https://github.com/jokkedk/webgrind)
+3. 访问`http://localhost/phpScriptsNeedsToBeProfiled.php?XDEBUG_PROFILE=true`
+
 
 本文参考了[codewall的文章](https://www.codewall.co.uk/debug-php-in-vscode-with-xdebug/)。图片也是转自同一篇文章。
