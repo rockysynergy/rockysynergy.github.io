@@ -8,8 +8,8 @@ title: 使用Composer
 ## 创建新的项目
 1. 从[Composer的官网](https://getcomposer.org/download/)下载并安装composer
 2. 在项目目录下创建`composer.json`文件，并且输入以下的内容：
-```JavaScript
 
+```JavaScript
 {
     "name": "Orq.PHP/Algs",
     "description": "The php implementation of alighrithms 4 book",
@@ -23,6 +23,7 @@ title: 使用Composer
     },
 }
 ````
+
 2.1 另外的方法是使用`composer init`命令，根据提示输入相关的内容
 
 
@@ -34,6 +35,7 @@ title: 使用Composer
 
 ## 安装github.com的仓库代码
 1. 新建composor.json并且输入下面的内容
+
 ```JavaScript
 {
     "require": {
@@ -47,4 +49,5 @@ title: 使用Composer
     ]
 }
 ```
+
 2. 运行`composer update`
