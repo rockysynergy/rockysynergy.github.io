@@ -31,3 +31,20 @@ title: 使用Composer
 1. 在composer中指明了shiy`[psr-4](https://www.php-fig.org/psr/psr-4/)`标准
 2. 使用`composer dumpautoload -o`命令更新autoload文件
 3. 在PHP文件里包含`require "vendor/autoload.php";`，就能自动加载需要的文件了。
+
+## 安装github.com的仓库代码
+1. 新建composor.json并且输入下面的内容
+```JavaScript
+{
+    "require": {
+        "Orq.PHP/Algs": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/rockysynergy/algs4_php.git"
+        }
+    ]
+}
+```
+2. 运行`composer update`
