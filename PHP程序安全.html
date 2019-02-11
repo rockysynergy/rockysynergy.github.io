@@ -1,0 +1,104 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>PHP程序安全</h1>
+    <p>PHP程序的安全隐患主要是涉及到用户输入、cookie和session。以下是编写安全的PHP程序方法：</p>
+<h2>不要轻易相信"用户"</h2>
+<p>你不能确定坐在另一边电脑旁的是谁，根据实际情况对用户输入进行以下处理：</p>
+<ol>
+<li>过滤：使用<code>filter</code>函数或<code>preg_replace</code>保留合法的部分，丢弃其它部分。</li>
+<li>使用<code>ctype_</code>函数或<code>preg_match</code>验证用户的输入</li>
+</ol>
+<h2>跨站脚本攻击</h2>
+<p>攻击者把JavaScript代码放到你的网站上，受害者浏览网页的时候浏览器会执行攻击代码。它是造成损失最大的攻击方式之一，但是解决方法确实最简单的。在本文其它方法的基础上使用<code>htmlentities</code>转义PHP输出。</p>
+<h2>CSRF</h2>
+<p>攻击者在受害者不知情的情况下，以他的身份执行转账、购物等让受害者蒙受损失的操作。解决方法是：</p>
+<ol>
+<li>把<code>form</code>组件的method设置成<code>post</code></li>
+<li>正常的用户肯定是先查看表单，然后在提交操作。所以每次form输出都生成并包含一个<code>csrf_token</code>，提交的时候与session['csrf_token']进行比较，核对。</li>
+</ol>
+<h2>Session安全</h2>
+<p>攻击者可以使用Session Fixation, Capture和Prediction三种方式获取受害者的Senssion完成攻击。PHP生成session id的随机算法大多数情况下让Session Prediction攻击变得不可能。</p>
+<h3>Session Fixation的解决方法</h3>
+<ol>
+<li><code>session.use_cookies</code>设置成1或者0</li>
+<li><code>session.use_only_cookies</code>设置成1，攻击者就不能通过其它方式修改session id了</li>
+<li><code>session.use_trans_sid</code>设置成0</li>
+<li><code>url_rewriter.tags</code>设置成空字符串</li>
+<li><code>session.name</code>设置成PHPSESSID以外的字符。</li>
+</ol>
+<h3>Session Capture(Hijacking)</h3>
+<ol>
+<li>设置<code>session.cookie_httponly</code>为1</li>
+<li>在<code>session_start</code>前比较$_SEVER与$_SESSION里的<code>Accept-Charset, Accept-Encoding, Accept-Language, User-Agent</code></li>
+</ol>
+<h2>SQL注入</h2>
+<p>使用PDO的预处理语句就可以解决。</p>
+<h2>存储密码</h2>
+<p>假如密码是明文存储在数据库表的，攻击者下载了数据库表之后，就能不费吹灰之力使用受害者身份登录并完成操作了。所以存储密码到数据库以前需要使用以下的代码进行处理：</p>
+<pre><code class="language-PHP">$salt = '378570bdf03b25c8efa9bfdcfb64f99e'; 
+// see php doc for hash_hmac for more info
+$hash = hash_hmac('SHA-1', $_POST['password'], $salt);</code></pre>
+<h2>暴力破解</h2>
+<ol>
+<li>使用<code>CAPTCHA</code></li>
+<li>当错误登录次数到达阈值以后，在一个时间段内拒绝从同一个IP发起的登录请求</li>
+</ol>
+<h2>网络窃听</h2>
+<p>攻击者可以窃听同一局域网的网络通信，其它的方法都会失效。所以所有的网站都需要使用SSL。</p>
+
+                </div>
+            </div>
+    </div>
+</body>

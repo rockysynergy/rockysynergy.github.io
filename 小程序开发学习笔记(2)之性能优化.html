@@ -1,0 +1,88 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>小程序开发学习笔记(2)之性能优化</h1>
+    <h1>性能问题分类</h1>
+<ol>
+<li>代码层面：比如说点击穿透</li>
+<li>算法层面：嵌套循环阻塞</li>
+<li>架构层面：渲染数据量大，造成页面卡顿</li>
+<li>网络层面：数据请求响应速度慢</li>
+</ol>
+<h1>常见的性能指标</h1>
+<ul>
+<li>白屏时间</li>
+<li>首屏时间(&lt;#5：优秀；&lt;#10m:合格): 组件结构和网络因素都会影响首屏时间</li>
+<li>首屏组件个数</li>
+<li>整页时间</li>
+<li>页面切换时间</li>
+<li>DNS时间</li>
+<li>后端响应时间</li>
+<li>连接时间</li>
+<li>后端时间</li>
+<li>请求数</li>
+<li>页面大小</li>
+</ul>
+<h1>性能优化方案</h1>
+<ul>
+<li>性能优化设计思想
+<strong> 系统层面：设备硬件、设备操作系统、微信软件平台、小程序架构等
+</strong> 设计层面：模块划分、组件设计、算法选择、编程规范、编译器选项等
+** 代码层面：熟悉框架、降低代码耦合度、分离无用代码块等</li>
+</ul>
+
+                </div>
+            </div>
+    </div>
+</body>

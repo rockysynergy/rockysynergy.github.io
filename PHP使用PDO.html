@@ -1,0 +1,163 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>PHP使用PDO</h1>
+    <p>使用PDO进行数据库操作的方法。</p>
+<h2>查询数据</h2>
+<pre><code class="language-php">// 方法1： 执行SQL语句
+$stmt = $db_conn-&gt;query('SELECT name, chef FROM recipes');
+
+// 方法2: 使用预处理语句（可以使用`?`代替名称占位符）
+$sql = 'SELECT name, description FROM recipes WHERE category = :category_name AND chef = :chef';
+$stmt = $db_conn-&gt;prepare($sql);
+
+// 可以使用下面2种方式或execute时给定查询条件
+$stmt-&gt;bindValue(':chef', 'Lorna');
+$stmt-&gt;bindParam(':category_name', $category); // 需要在execute之前设置$category变量并赋值
+
+$stmt-&gt;execute(array(
+ "category_name" =&gt; 'starter')
+);
+
+
+// 获取执行结果，PDO::FETCH_ASSOC， PDO::FETCH_ASSOC，PDO::FETCH_BOTH， PDO::FETCH_CLASS
+while($row = $stmt-&gt;fetch()) {
+ echo $row['name'] . ' by ' . $row['chef'] . "\n";
+}</code></pre>
+<h2>插入数据</h2>
+<pre><code class="language-php">$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+$sql = 'INSERT INTO recipes (name, description, chef, created)
+    VALUES (:name, :description, :chef, NOW())';
+$stmt = $db_conn-&gt;prepare($sql);
+$stmt-&gt;execute(array(
+    ':name' =&gt; 'Weekday Risotto',
+    ':description' =&gt; 'Creamy rice-based dish, boosted by in-season
+    ingredients. Otherwise known as \'raid-the-fridge risotto\'',
+    ':chef' =&gt; 'Lorna')
+);
+echo "New recipe id: " . $db_conn-&gt;lastInsertId();</code></pre>
+<h2>获取修改记录数目</h2>
+<pre><code class="language-php">$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+$sql = 'UPDATE recipes SET category_id = :id
+ WHERE category_id is NULL';
+$stmt = $db_conn-&gt;prepare($sql);
+$stmt-&gt;execute(array(':id' =&gt; 2));
+echo $stmt-&gt;rowCount() . ' rows updated';</code></pre>
+<h2>删除记录</h2>
+<pre><code class="language-php">$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+$stmt = $db_conn-&gt;prepare('DELETE FROM categories WHERE name = :name');
+$stmt-&gt;execute(array(':name' =&gt; 'Starter'));
+echo $stmt-&gt;rowCount() . ' row(s) deleted';</code></pre>
+<h2>使用PDO的过程中需要处理有可能产生的异常和错误</h2>
+<p>除了下面的错误处理，在实际项目中有可能需要处理<code>fetch</code>产生的错误（返回<code>false</code>，更多的信息可以通过<code>PDOStatement::errorInf()</code>获取）</p>
+<pre><code class="language-php">try {
+    $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+} catch (PDOException $e) {
+    echo "Could not connect to database";
+    exit;
+}
+$stmt = $db_conn-&gt;prepare($sql);
+if($stmt) {
+    // perform query
+    $result = $stmt-&gt;execute(array(
+        "recipe_id" =&gt; 1)
+    );
+
+    if($result) {
+        $recipe = $stmt-&gt;fetch();
+        print_r($recipe);
+    } else {
+        $error = $stmt-&gt;errorInfo();
+        echo "Query failed with message: " . $error[2];
+    }
+}</code></pre>
+<h2>事务</h2>
+<pre><code class="language-php">try {
+    $db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+} catch (PDOException $e) {
+    echo "Could not connect to database";
+    exit;
+}
+try {
+    $db_conn-&gt;beginTransaction();
+    $db_conn-&gt;exec('UPDATE categories SET id=17 WHERE➥
+    name = "Pudding"');
+    $db_conn-&gt;exec('UPDATE recipes SET category_id=17 WHERE➥
+    category_id=3');
+    $db_conn-&gt;commit();
+} catch (PDOException $e) {
+    $db_conn-&gt;rollBack();
+    echo "Something went wrong: " . $e-&gt;getMessage();
+}</code></pre>
+<h2>Stored Procedure</h2>
+<ol>
+<li>在<code>MYSQL</code>里执行以下操作<pre><code class="language-sql">delmiter $$
+CREATE PROCEDURE get_recipes()
+BEGIN
+SELECT name, chef
+FROM recipes
+ORDER BY created DESC ;
+END $$
+delimiter ;</code></pre>
+</li>
+<li><code>PHP</code>代码<pre><code class="language-php">$db_conn = new PDO('mysql:host=localhost;dbname=recipes', 'php-user', 'secret');
+$stmt = $db_conn-&gt;query('call get_recipes()');
+$results = $stmt-&gt;fetchAll();</code></pre>
+</li>
+</ol>
+
+                </div>
+            </div>
+    </div>
+</body>

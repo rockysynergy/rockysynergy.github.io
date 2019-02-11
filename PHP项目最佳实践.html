@@ -1,0 +1,115 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>PHP项目最佳实践</h1>
+    <p>除了简单的动态页面网站以外， PHP被越来越多用于编写中大型项目。随之而来，项目团队需要采用工程化的项目实践来提高开发效率以及降低维护成本、提高项目的成功率。本文对相应的实践做概述性的总结。</p>
+<h2>版本控制</h2>
+<p>使用git进行版本控制可以方便团队成员进行同步开发。git分支策略能够在保证代码稳定的同时方便新功能的开发。</p>
+<h3>主分支</h3>
+<ol>
+<li><code>master</code>: 下一个发布版本的代码都必须存储在本分支下</li>
+<li><code>stable</code>: 当前发布了的版本代码<h3>支持性分支</h3>
+</li>
+<li><code>性能分支</code>：从master分支创建，完成后合并到master分支，命名规范为<code>feature-&lt;tbd number&gt;</code></li>
+<li><code>Bug分支</code>：从master分支创建，完成后合并到master分支，命名规范为<code>bug-&lt;id&gt;</code>。修复当前在线代码的bug并在下一次版本发布时包含修复代码时使用。操作命令参考<code>性能分支</code>部分。需要把创建本分支以后master分支的更新合并到本分支。</li>
+<li><code>Hotfix分支</code>：当在线代码需要紧急修复的bug时创建。从stable分支创建，完成后合并到master和stable分支，命名规范为<code>hotfix-&lt;id&gt;</code>。
+<img src="./images/20190208_git_branch.png" alt="alt text" title="git分支策略" /></li>
+</ol>
+<h4>分支操作（以feature分支为例）</h4>
+<pre><code class="language-bash"># 开始新的分支
+$ git checkout -b feature-id master                 // creates a local branch for the new feature
+$ git push origin feature-id                        // makes the new feature remotely available
+
+# 阶段性合并
+$ git merge master
+
+# 完成开发
+$ git checkout master                               // change to the master branch  
+$ git merge --no-ff feature-id                      // makes sure to create a commit object during merge
+$ git push origin master                            // push merge changes
+$ git push origin :feature-id                       // deletes the remote branch</code></pre>
+<h2>依赖管理</h2>
+<p>使用<a href="https://getcomposer.org/">composer</a>，进行依赖管理可以实现模块化的开发，并且它也提供了方便使用的<a href="https://rockysynergy.github.io/Using-Composer/">自动加载特性</a>。</p>
+<h2>性能</h2>
+<p>性能优化的终极目的是缩短Web应用响应用户操作的时间，提高用户的使用体验。需要根据项目的实际情况指定性能优化策略。</p>
+<h3>流程</h3>
+<pre><code>1. 压力测试：把被测系统看作一个黑盒，测试并记录系统的响应时间。
+2. 剖析：开发环境使用xdebug，生产环境使用[XHProf](https://tideways.com/profiler/xhprof-for-php7)找到性能瓶颈
+3. 优化：对性能瓶颈部分进行优化。</code></pre>
+<p>以上流程应该是一个闭合的过程，迭代递进的进行性能优化会大大提高效率。</p>
+<h3>缓存</h3>
+<ol>
+<li>PHP代码是转化成OPCode然后再Zend Engine上运行的，使用<a href="http://php.net/manual/en/intro.opcache.php">OPCache</a>可以把Opcode保存在内存，这样就不用每次请求都重新解析PHP代码了。</li>
+<li>使用<code>Redis</code>把Session以及数据库查询结果缓存在内存避免每次请求都从数据库或文件系统读取数据。</li>
+</ol>
+<h3>配置</h3>
+<p>对nginx、MySql服务器以及PHP进行配置也可以提高系统的响应速度。</p>
+<h3>代码优化</h3>
+<ol>
+<li>mysql优化，包括数据库设计、索引建立以及查询优化以及其它高级优化。</li>
+<li>算法优化</li>
+</ol>
+<h2>代码规范</h2>
+<p>无论是团队开发还是个人项目都需要有代码规范</p>
+<h2>测试</h2>
+<ol>
+<li>单元测试：粒度最小的测试</li>
+<li>集成测试：测试模块之间的合成</li>
+<li>界面测试</li>
+</ol>
+
+                </div>
+            </div>
+    </div>
+</body>

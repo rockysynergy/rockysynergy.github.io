@@ -1,0 +1,101 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>数据库系统概述</h1>
+    <p>数据库系统由以下部分组成：</p>
+<ul>
+<li>数据库：对表、属性、值和键的定义以及具体的数据记录</li>
+<li>数据库管理系统：用于操作和管理底层数据库的应用软件</li>
+<li>数据库管理员：创建、管理和维护数据库以及数据库记录</li>
+<li>用户：使用数据库系统的人员，比如说图书管理系统的读者、图书管理员等</li>
+<li>底层计算机系统：数据库以及数据库管理系统的物理实现需要底层操作系统和网络系统提供所需的接口</li>
+</ul>
+<p>标准的关系数据库系统由以下部分组长：</p>
+<ul>
+<li>三层视图：外部视图、逻辑视图和内部视图</li>
+<li>2级映射：E-C映射和C-I映射</li>
+</ul>
+<p>经典的数据库包括树状、网状层次结构和关系模型数据库</p>
+<p>= 03 关系模型基本概念</p>
+<ul>
+<li>一个关系就是一个Table</li>
+<li>关系模型就是处理Table的，它由3部分组成：
+<strong> 描述DB各种数据的基本结构形式（Table/Relation）
+</strong> 描述Table与Table之间可能发生的各种操作（关系运算）
+** 描述这些操作所应该遵循的约束条件（完整性约束）</li>
+</ul>
+<ol>
+<li>首先定义”列“的取值范围也就是域</li>
+<li>再定义元祖以及所有可能合成的元组（笛卡儿积）</li>
+<li>关系：一组域D1, D2, ... Dn的笛卡儿积的子集</li>
+</ol>
+<p>关系的度： 属性的数量
+关系的基数： 关系中元组的数目</p>
+<p>关系的特性：</p>
+<ol>
+<li>列是同质的</li>
+<li>不同的列可以来自同一个域</li>
+<li>不靠位置而是按列名或元祖的值来区分</li>
+<li>需要满足第一范式（属性不可再分）</li>
+</ol>
+<ul>
+<li>实体完整性</li>
+<li>参照完整性</li>
+<li>用户自定义完整性</li>
+</ul>
+
+                </div>
+            </div>
+    </div>
+</body>

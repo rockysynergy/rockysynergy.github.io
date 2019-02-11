@@ -1,0 +1,170 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>java Web学习笔记</h1>
+    <h1>Servlet</h1>
+<ul>
+<li>一个servlet就是一个java类，并提供基于请求-响应模式的Web服务</li>
+<li>Servlet容器是一个服务端程序负责装载和管理Servlet</li>
+<li>Servlet的生命周期：<ul>
+<li>Init方法: 在第一次启动Servlet时或Servlet容器启动时（load-on-start-up配置）被调用</li>
+<li>Service以及HTTP的方法：Servlet响应客户端的请求时调用</li>
+<li>destroy方法：Servlet被销毁（停止Servlet所在的Web应用）之前调用</li>
+</ul>
+</li>
+</ul>
+<h2>配置信息</h2>
+<h3>ServletConfig</h3>
+<pre><code class="language-xml">&lt;init-param&gt;
+    &lt;param-name&gt;data_1&lt;/param-name&gt;
+    &lt;param-value&gt;value_1&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre>
+<pre><code class="language-java">ServletConfig config = this.getServletConfig();
+String v1 = config.getInitParameter("data_1");</code></pre>
+<ul>
+<li>Servlet初始化过程中，<code>&lt;init-param&gt;</code>参数将会被封装到ServletConfig<ul>
+<li>每个Servlet支持设置一个或者多个<code>&lt;init-param&gt;</code></li>
+<li>它不是全局共享</li>
+</ul>
+</li>
+</ul>
+<h3>ServletContext</h3>
+<ul>
+<li>Servlet容器启动时会为每个Web应用初始化一个ServletContext，它在该Web应用中全局唯一</li>
+</ul>
+<pre><code class="language-xml">&lt;context-param&gt;
+    &lt;param-name&gt;global_1&lt;/param-name&gt;
+    &lt;param-value&gt;111&lt;/param-value&gt;
+&lt;/context-param&gt;</code></pre>
+<pre><code class="language-java">ServletContext ctx = this.getServletContext();
+String gv1 = ctx.getInitParameter("global_1");</code></pre>
+<ul>
+<li>Servlet之间共享信息<pre><code class="language-java">
+// In Servlet A
+ctx.setAttribute("attr_1", "121212");</code></pre>
+</li>
+</ul>
+<p>// In Servlet B
+String at1 = (String) ctx.getAttribute("attr_1");</p>
+<pre><code>
+* 读取外部资源配置文件信息的方法`getResource`, `getResourceAsStream`, `getRealPath`
+* 配置文件放在src/main/resources文件夹里
+```java
+try {
+    URL url = ctx.getResource("/WEB-INF/classes/log4j.properties");
+    InputStream in = url.openStream();
+    String v1 = GeneralUtil.getProperty("log4j.rootLogger", in);
+} catch (MalformedURLException e) {
+    e.printStackTrace();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// getResourceAsStream 方法
+URL in2 = ctx.getResourceAsStream("/WEB-INF/classes/log4j.properties");
+String v2 = GeneralUtil.getProperty("log4j.rootLogger", in2);
+
+// getRealPath 方法
+String path = ctx.getRealPath("/WEB-INF/classes/log4j.properties");
+File f = new File(path);
+try {
+    InputStream in3 = new FileInputStream(f);
+    String v3 = GeneralUtil.getProperty("log4j.rootLogger", in3);
+} catch (FileNotFoundException e) {
+    e.printStackTrace();
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+<ul>
+<li>ServletContext还可以实现Servlet转发</li>
+</ul>
+<h2>部署描述符web.xml</h2>
+<ul>
+<li>部署描述符包括<code>servlet</code>, <code>servlet-mapping</code>, <code>init-param</code>（是servlet的子元素）, <code>context-param</code></li>
+<li>url-pattern支持模糊匹配</li>
+<li>ServletMapping匹配规则</li>
+</ul>
+<ol>
+<li>精确路径匹配，完全匹配</li>
+<li>最长路径，最长前缀匹配</li>
+<li>扩展名匹配</li>
+<li>default servlet 匹配或放弃匹配并报错</li>
+</ol>
+<h3>load-on-startup</h3>
+<ul>
+<li>如果需要Servlet容器启动时执行操作，需要在<code>sevlet</code>下配置<code>load-on-startup</code>，</li>
+<li>如果没有设置或设置成负数则表示只有处理请求时容器才加载该Servlet</li>
+<li>数值越小，启动优先级越高</li>
+</ul>
+<h3>其它</h3>
+<pre><code class="language-xml">&lt;error-page&gt;
+    &lt;error-code&gt;404&lt;/error-code&gt;
+    &lt;location&gt;/404.html&lt;/location&gt;
+&lt;/error-page&gt;</code></pre>
+<ul>
+<li>
+<p>还可以添加exception-type子元素</p>
+</li>
+<li>
+<p><code>welcome-file-list</code>可包含多个<code>welcome-file</code>，顺序加载</p>
+</li>
+<li>
+<p><code>mime-mapping</code>包括<code>extension</code>和<code>mime-type</code>子元素</p>
+</li>
+</ul>
+
+                </div>
+            </div>
+    </div>
+</body>

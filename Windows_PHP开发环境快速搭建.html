@@ -1,0 +1,111 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <h1>Windows PHP开发环境快速搭建</h1>
+    <p>本文记录了在Windows系统快速搭建PHP开发环境的步骤。</p>
+<p>在编写PHP代码的时候，使用Xdebug可以大大提高开发效率。</p>
+<h2>安装PHP</h2>
+<h3>第一步</h3>
+<p>从<a href="https://www.apachefriends.org/index.html">apachefiends</a>下载并安装xampp。</p>
+<h3>第二步：安装XDebug</h3>
+<ol>
+<li>根据<a href="https://xdebug.org/wizard.php">XDebug官网的安装向导</a>安装Xdebug</li>
+<li>在php.ini中添加以下的设置并重启Apache<pre><code class="language-PHP">[xDebug]
+zend_extension="php_xdebug-2.6.0-7.0-vc14.dll"
+xdebug.remote_enable = 1
+xdebug.remote_autostart=on</code></pre>
+</li>
+</ol>
+<h2>配置VSCode</h2>
+<h3>第一步</h3>
+<p>点击左侧"Extensions"标签，搜索<code>PHP Debug</code>插件
+<img src="./images/20190207_xdebug/php-debug-by-felix-becker.jpg" alt="alt text" title="PHP Debug插件" /></p>
+<h3>第二步</h3>
+<p>如同所示添加配置
+<img src="./images/20190207_xdebug/setup-php-debug-step-1.jpg" alt="alt text" title="添加配置 1" />
+然后选择<code>PHP</code>
+<img src="./images/20190207_xdebug/setup-php-debug-step-2.jpg" alt="alt text" title="添加配置 2" /></p>
+<ul>
+<li>使用自动生成的Configuration就可以了。后续假如有问题，有可能需要修改<code>runtimeExecutable</code>。更多的配置可以查看<code>PHP Debug</code>的<a href="https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug">官网</a></li>
+<li>点击左侧的“Debug"并选择"Launch currently open script"就可以调试当前打开的PHP文件了。</li>
+</ul>
+<h3>第三步（可选）</h3>
+<p>为了能够模仿真实的用户访问（发送Get或Post HTTP请求等），对PHP代码进行调试。需要安装Chome浏览器的<code>Xdebug help</code>插件。</p>
+<p>使用Chrome浏览器访问<a href="https://chrome.google.com/webstore/category/extensions">插件市场</a>安装
+<img src="./images/20190207_xdebug/xdebug-helper.jpg" alt="alt text" title="Xdebug help" /></p>
+<ul>
+<li>有可能需要设置IDE Key。打开Chrome浏览器的Xdebug help插件配置页面，填写IDE Key。IDE Key在localhost/phpinfo.php页面的xdebug那里可以找到。</li>
+</ul>
+<h2>使用Xdebug</h2>
+<h3>调试</h3>
+<ol>
+<li>对于不需要考虑浏览器的调试，只需打开PHP文件然后在调试面板选择"Launch currently open script"就可以了</li>
+<li>对于需要考虑浏览器的调试，需要使用Chrome打开页面并且选择<code>Debug</code>。相应的结果就会显示在VSCode里了。</li>
+</ol>
+<h3>Profiling</h3>
+<ol>
+<li>在php.ini中进行下面的配置<pre><code class="language-PHP">xdebug.profiler_enable = 0
+xdebug.profiler_output_name = xdebug.out.%t
+xdebug.profiler_output_dir = /tmp
+xdebug.profiler_enable_trigger = 1</code></pre>
+</li>
+<li>下载并安装<a href="https://github.com/jokkedk/webgrind">webgrind</a></li>
+<li>访问<code>http://localhost/phpScriptsNeedsToBeProfiled.php?XDEBUG_PROFILE=true</code></li>
+</ol>
+<p>本文参考了<a href="https://www.codewall.co.uk/debug-php-in-vscode-with-xdebug/">codewall的文章</a>。图片也是转自同一篇文章。</p>
+
+                </div>
+            </div>
+    </div>
+</body>
