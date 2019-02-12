@@ -52,11 +52,15 @@
             <div class="content pure-u-1 pure-u-md-3-4">
                 <div>
                     
-    <article>
-        <header class="post-header">
-            <h1 class="post-title">使用Composer</h1>
+    
+        <article class="post-header">
+            <h2 class="post-title">
+                <a href="Laravel项目的典型流程.html">
+                    Laravel项目的典型流程
+                </a>
+            </h2>
             <p class="post-meta">
-                更新于：2019-02-11 15:16:40
+                更新于：2019-02-11 15:16:56
                 
 
     
@@ -69,59 +73,15 @@
 
     
             
-                <a class="post-category post-category-one" href="Web_Dev.html">
-                     Web_Dev
+                <a class="post-category post-category-one" href="Laravel.html">
+                     Laravel
                 </a>
             
         
 
             </p>
-        </header>
-        <p>使用Composer进行PHP项目的依赖管理可以提高项目开发的效率。Composer还提供了方便使用的autoload机制。</p>
-<h2>创建新的项目</h2>
-<ol>
-<li>从<a href="https://getcomposer.org/download/">Composer的官网</a>下载并安装composer</li>
-<li>在项目目录下创建<code>composer.json</code>文件，并且输入以下的内容：</li>
-</ol>
-<pre><code class="language-JavaScript">{
-    "name": "Orq.PHP/Algs",
-    "description": "The php implementation of alighrithms 4 book",
-    "require": {
-        "php": "^7.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "Orq\\PHP\\Algs\\": "src"
-        }
-    },
-}</code></pre>
-<p>2.1 另外的方法是使用<code>composer init</code>命令，根据提示输入相关的内容</p>
-<h2>autoload</h2>
-<ol>
-<li>创建<code>src</code>子目录</li>
-<li>在composer中指明了shiy<code>[psr-4](https://www.php-fig.org/psr/psr-4/)</code>标准</li>
-<li>使用<code>composer dumpautoload -o</code>命令更新autoload文件</li>
-<li>在PHP文件里包含<code>require "vendor/autoload.php";</code>，就能自动加载需要的文件了。</li>
-</ol>
-<h2>安装github.com的仓库代码</h2>
-<ol>
-<li>新建composor.json并且输入下面的内容</li>
-</ol>
-<pre><code class="language-JavaScript">{
-    "require": {
-        "Orq.PHP/Algs": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/rockysynergy/algs4_php.git"
-        }
-    ]
-}</code></pre>
-<ol start="2">
-<li>运行<code>composer update</code></li>
-</ol>
-    </article>
+        </article>
+    
 
                 </div>
             </div>
