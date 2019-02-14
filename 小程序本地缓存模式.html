@@ -52,57 +52,67 @@
             <div class="content pure-u-1 pure-u-md-3-4">
                 <div>
                     
-    
-        <article class="post-header">
-            <h2 class="post-title">
-                <a href="小程序开发学习笔记(2)之性能优化.html">
-                    小程序开发学习笔记(2)之性能优化
-                </a>
-            </h2>
-            <p class="post-meta">
-                更新于：2019-02-11 15:15:38
-                
-
-    
-            
-                <a class="post-category post-category-zero" href="Learn.html">
-                    Learn
-                </a>
-            
-        
-
-    
-            
-                <a class="post-category post-category-one" href="微信小程序.html">
-                     微信小程序
-                </a>
-            
-        
-
-            </p>
-        </article>
-    
-        <article class="post-header">
-            <h2 class="post-title">
-                <a href="小程序本地缓存模式.html">
-                    小程序本地缓存模式
-                </a>
-            </h2>
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">小程序本地缓存模式</h1>
             <p class="post-meta">
                 更新于：2019-02-14 10:45:47
                 
 
     
             
-                <a class="post-category post-category-two" href="微信小程序.html">
+                <a class="post-category post-category-zero" href="微信小程序.html">
                     微信小程序
                 </a>
             
         
 
             </p>
-        </article>
-    
+        </header>
+        <p>把页面数据缓存到本地可以避免重复访问远程服务器来获取数据，从而加快页面响应速度、改善用户体验。</p>
+<h2>缓存</h2>
+<pre><code class="language-JavaScript">  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    // Initialize Page.data from local storage, if no local storage exists, request remote server
+    wx.getStorage({
+      key: this.getSectionStorageKey(),
+      complete: (res) =&gt; {
+        if (/^getStorage:fail.*/.test(res.errMsg)) {
+          // Fetch lesson lesson if no local cache is available
+          wx.request({
+            url: `${conf.SERVER_URL}actions/lesson/`,
+            data: {
+            },
+            success: (res) =&gt; {
+              // Save section to local storage
+              this.cacheLesson();
+              // use response data to initialize Page.data
+              initialize(res.data);
+            }
+          }); //End request data
+        } else {
+          // Use local cached data to initialize the data
+          initialize(res.data);
+        }
+      },
+    }); // End getStorage
+
+    let initialize = (properties) =&gt; {
+      this.setData({
+          prop1: properties.prop1
+          prop2: properties.prop2
+      });
+
+      wx.setNavigationBarTitle({
+        title: properties.pageTitle;
+      })
+    }
+  },
+</code></pre>
+<p>不需要使用缓存数据的时候调用<code>wx.clearStorage</code>清楚缓存</p>
+    </article>
 
                 </div>
             </div>
