@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">Windows PHP开发环境快速搭建</h1>
             <p class="post-meta">
-                更新于：2019-02-16 09:39:29
+                更新于：2019-02-22 21:31:41
                 
 
     
@@ -96,18 +96,18 @@ xdebug.remote_autostart=on</code></pre>
 <p>点击左侧"Extensions"标签，搜索<code>PHP Debug</code>插件
 <img src="../images/20190207_xdebug/php-debug-by-felix-becker.jpg" alt="alt text" title="PHP Debug插件" /></p>
 <h3>第二步</h3>
-<p>如同所示添加配置
-<img src="../images/20190207_xdebug/setup-php-debug-step-1.jpg" alt="alt text" title="添加配置 1" />
-然后选择<code>PHP</code>
-<img src="../images/20190207_xdebug/setup-php-debug-step-2.jpg" alt="alt text" title="添加配置 2" /></p>
+<p>如同所示添加配置</p>
+<p><img src="../images/20190207_xdebug/setup-php-debug-step-1.jpg" alt="alt text" title="添加配置 1" /></p>
+<p>然后选择<code>PHP</code></p>
+<p><img src="../images/20190207_xdebug/setup-php-debug-step-2.jpg" alt="alt text" title="添加配置 2" /></p>
 <ul>
 <li>使用自动生成的Configuration就可以了。后续假如有问题，有可能需要修改<code>runtimeExecutable</code>。更多的配置可以查看<code>PHP Debug</code>的<a href="https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug">官网</a></li>
 <li>点击左侧的“Debug"并选择"Launch currently open script"就可以调试当前打开的PHP文件了。</li>
 </ul>
 <h3>第三步（可选）</h3>
 <p>为了能够模仿真实的用户访问（发送Get或Post HTTP请求等），对PHP代码进行调试。需要安装Chome浏览器的<code>Xdebug help</code>插件。</p>
-<p>使用Chrome浏览器访问<a href="https://chrome.google.com/webstore/category/extensions">插件市场</a>安装
-<img src="../images/20190207_xdebug/xdebug-helper.jpg" alt="alt text" title="Xdebug help" /></p>
+<p>使用Chrome浏览器访问<a href="https://chrome.google.com/webstore/category/extensions">插件市场</a>安装</p>
+<p><img src="../images/20190207_xdebug/xdebug-helper.jpg" alt="alt text" title="Xdebug help" /></p>
 <ul>
 <li>有可能需要设置IDE Key。打开Chrome浏览器的Xdebug help插件配置页面，填写IDE Key。IDE Key在localhost/phpinfo.php页面的xdebug那里可以找到。</li>
 </ul>
