@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">数据库系统概述(1)之SQL语句</h1>
             <p class="post-meta">
-                更新于：2019-02-26 23:11:43
+                更新于：2019-02-27 20:25:26
                 
 
     
@@ -86,7 +86,13 @@
 </ol>
 <h2>示例关系</h2>
 <ol>
-<li>学生：学号S#， 姓名Sname, 性别Ssex, 年龄Sage, 所属系别D#, 班级Sclass。Student(S# char(8), Sname char(10), Ssex char(2), Sage integer, D# char(2), Sclass char(6))</li>
+<li><code>学生</code>：学号S#， 姓名Sname, 性别Ssex, 年龄Sage, 所属系别D#, 班级Sclass : Student(S# char(8), Sname char(10), Ssex char(2), Sage integer, D# char(2), Sclass char(6))</li>
+<li><code>院系</code>: 系别D#，系名Dname, 系主任Dean : Dept (D# char(2), Dname char(10), Dean char(10))</li>
+<li><code>课程</code>: 课号C#, 课名Cname, 教师编号T#, 学时Chours，学分Credit : Course ( C# char(3), Cname char(12), Chours integer,
+Credit float(1), T# char(3) )</li>
+<li><code>教师</code>: 教师编号T#，教师名Tname, 所属院系D#，工资Salary : Teacher ( T# char(3), Tname char(10), D# char(2),
+Salary float(2) )</li>
+<li><code>选课</code>: 学号S#, 课号C#, 成绩Score : SC ( S# char(8), C# char(3), Score float(1) )</li>
 </ol>
     </article>
 
