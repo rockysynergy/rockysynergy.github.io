@@ -18,7 +18,7 @@ $dtime = DateTime::createFromFormat("d/m G:i", "13/10 15:00");
 $timestamp = $dtime->getTimestamp();
 
 //显示的时候
-$time = date('Y-m-d', $data['create_time']);
+$time = date('Y-m-d G:i:s', $data['create_time']);
 ```
 
 ## DB和模型
