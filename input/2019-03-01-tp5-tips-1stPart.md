@@ -21,6 +21,7 @@ $timestamp = $dtime->getTimestamp();
 $time = date('Y-m-d G:i:s', $data['create_time']);
 ```
 
+
 ## DB和模型
 
 1. 模型的update静态方法貌似不支持`allowFields`方法
