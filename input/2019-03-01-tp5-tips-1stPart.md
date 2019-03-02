@@ -24,7 +24,7 @@ $time = date('Y-m-d G:i:s', $data['create_time']);
 $dt = "2018-02-31";
 echo date('Y-m-01', strtotime($dt)) . ' - ' . date('Y-m-t', strtotime($dt));
 
-/** Warning: 时间戳的方法在2038年以后可能会失效所以最好使用Datetime方法 **、
+/** Warning: 如果系统是32位机器的话时间戳的方法在2038年以后可能会失效所以最好使用Datetime方法 **、
 $d = new DateTime( '2040-11-23' ); 
 echo $d->format( 'Y-m-t' );
 ```
@@ -41,3 +41,28 @@ protected static $append_attr = ['applytime_title', 'status_title', 'method_titl
 // 查询数据的时候
 $list ['data'] = self::where($where)->field($param['field'])->order()->select()->append(self::$append_attr)->toArray();
 ```
+
+3. 多条件查询
+```PHP
+// 版本5.1.21以后可以使用数组方式
+use think\db\Where;
+...
+ $cond = new Where;   
+ $cond['pay_way'] = ['<>', 'granary'];
+ $cond['member_id'] = ['>', $memberId];
+ $cond['pay_status'] = ['=', 0];
+ 
+$var = \think\Db::table('hl_team_order')->where($cond)
+  ->fetchSql()
+  ->whereTime('create_time', 'between', ['2019-02-21', date('Y-m-t', strtotime($period))])            
+  ->select();
+  
+// 方法2：使用多个where
+$var = \app\common\model\TeamOrder::where('pay_way', '<>', 'granary')
+                ->where('pay_status', 0)
+                ->where('member_id', $memberId)
+                ->whereTime('create_time', 'between', [date('Y-m-01', strtotime($period)), date('Y-m-t', strtotime($period))])
+                ->fetchSql()
+                ->select();
+ dump($var);
+ ```
