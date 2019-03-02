@@ -18,3 +18,16 @@ tags: MySql, 数据库
 
 1. mysqldump -t -uroot -p db_name table_name -w"id<1000000" > file_name.dump 
 2. SELECT * INTO OUTFILE 'data_path.sql' from table where id<100000
+
+
+## 克隆部分数据
+```SQL
+CREATE TEMPORARY TABLE temp_table 
+  SELECT * FROM your_table WHERE id=1;
+  
+UPDATE temp_table SET id=NULL; /* Update other values at will. */
+
+INSERT INTO your_table SELECT * FROM temp_table;
+
+DROP TABLE temp_table;
+```
