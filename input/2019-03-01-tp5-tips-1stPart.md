@@ -32,7 +32,33 @@ echo $d->format( 'Y-m-t' );
 
 ## DB和模型
 
-1. 模型的update静态方法貌似不支持`allowFields`方法
+1. 更新模型的update静态方法不支持`allowField`方法。
+
+```PHP
+// 方法1：数组里和数据库表里都有的字段都会被更新。即使开启了autoWriteTimestamp，但是数据库表中没有update_time字段，也不会报错
+        $data = [
+            'member_id' => 11083,
+            'earnings' => 580,
+            'performance' => 40000,
+            'status' => 1,
+            'gash' => 'aaaa'
+        ];
+        $income = model('\app\common\model\AgentIncome');
+        $var = \app\common\model\AgentIncome::update($data, ['member_id' => $data['member_id']]);
+        
+// 方法2：只是更新status和earnings字段。开启了autoWriteTimestamp，但是数据库表中没有update_time字段会报错，除非关闭updateTime
+
+        $data = [
+            'member_id' => 11083,
+            'earnings' => 250,
+            'performance' => 40000,
+            'status' => 1,
+            'gash' => 'aaaa' 
+        ];
+        $income = model('\app\common\model\AgentIncome');
+        $var = $income->allowField(['earnings', 'status'])->save($data, ['member_id' => $data['member_id']]);
+```
+
 2. 通过模型中的获取器得到的属性在前端不显示的问题
 
 ```PHP
@@ -43,6 +69,7 @@ $list ['data'] = self::where($where)->field($param['field'])->order()->select()-
 ```
 
 3. 多条件查询
+
 ```PHP
 // 版本5.1.21以后可以使用数组方式
 use think\db\Where;
