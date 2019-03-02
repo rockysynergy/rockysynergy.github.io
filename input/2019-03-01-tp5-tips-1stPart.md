@@ -19,6 +19,10 @@ $timestamp = $dtime->getTimestamp();
 
 //显示的时候
 $time = date('Y-m-d G:i:s', $data['create_time']);
+
+// 获取当月的第一天和最后一天
+$dt = "2018-02-31";
+echo date('Y-m-01', strtotime($dt)) . ' - ' . date('Y-m-t', strtotime($dt));
 ```
 
 
