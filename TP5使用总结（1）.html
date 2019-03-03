@@ -1,0 +1,148 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">TP5使用总结（1）</h1>
+            <p class="post-meta">
+                更新于：2019-03-03 22:01:36
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="Learn.html">
+                    Learn
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="TP5.html">
+                     TP5
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <p>TP5使用过程中踩过的坑与经验总结</p>
+<h2>时间戳</h2>
+<ol>
+<li>数据库使用<code>int</code>类型</li>
+<li>PHP代码可参考<a href="./PHP时间处理tips.html">PHP时间处理技巧</a></li>
+</ol>
+<h2>DB和模型</h2>
+<ol>
+<li>更新模型的update静态方法不支持<code>allowField</code>方法。</li>
+</ol>
+<pre><code class="language-PHP">// 方法1：数组里和数据库表里都有的字段都会被更新。即使开启了autoWriteTimestamp，但是数据库表中没有update_time字段，也不会报错
+        $data = [
+            'member_id' =&gt; 11083,
+            'earnings' =&gt; 580,
+            'performance' =&gt; 40000,
+            'status' =&gt; 1,
+            'gash' =&gt; 'aaaa'
+        ];
+        $income = model('\app\common\model\AgentIncome');
+        $var = \app\common\model\AgentIncome::update($data, ['member_id' =&gt; $data['member_id']]);
+
+// 方法2：只是更新status和earnings字段。开启了autoWriteTimestamp，但是数据库表中没有update_time字段会报错，除非关闭updateTime
+
+        $data = [
+            'member_id' =&gt; 11083,
+            'earnings' =&gt; 250,
+            'performance' =&gt; 40000,
+            'status' =&gt; 1,
+            'gash' =&gt; 'aaaa' 
+        ];
+        $income = model('\app\common\model\AgentIncome');
+        $var = $income-&gt;allowField(['earnings', 'status'])-&gt;save($data, ['member_id' =&gt; $data['member_id']]);</code></pre>
+<ol start="2">
+<li>通过模型中的获取器得到的属性在前端不显示的问题</li>
+</ol>
+<pre><code class="language-PHP">// 模型中增加
+protected static $append_attr = ['applytime_title', 'status_title', 'method_title'];
+// 查询数据的时候
+$list ['data'] = self::where($where)-&gt;field($param['field'])-&gt;order()-&gt;select()-&gt;append(self::$append_attr)-&gt;toArray();</code></pre>
+<ol start="3">
+<li>多条件查询</li>
+</ol>
+<pre><code class="language-PHP">// 版本5.1.21以后可以使用数组方式
+use think\db\Where;
+...
+ $cond = new Where;   
+ $cond['pay_way'] = ['&lt;&gt;', 'granary'];
+ $cond['member_id'] = ['&gt;', $memberId];
+ $cond['pay_status'] = ['=', 0];
+
+$var = \think\Db::table('hl_team_order')-&gt;where($cond)
+  -&gt;fetchSql()
+  -&gt;whereTime('create_time', 'between', ['2019-02-21', date('Y-m-t', strtotime($period))])            
+  -&gt;select();
+
+// 方法2：使用多个where
+$var = \app\common\model\TeamOrder::where('pay_way', '&lt;&gt;', 'granary')
+                -&gt;where('pay_status', 0)
+                -&gt;where('member_id', $memberId)
+                -&gt;whereTime('create_time', 'between', [date('Y-m-01', strtotime($period)), date('Y-m-t', strtotime($period))])
+                -&gt;fetchSql()
+                -&gt;select();
+ dump($var);</code></pre>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
