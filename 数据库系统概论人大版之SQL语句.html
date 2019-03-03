@@ -1,0 +1,254 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">数据库系统概论人大版之SQL语句</h1>
+            <p class="post-meta">
+                更新于：2019-03-03 21:45:23
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="Learn.html">
+                    Learn
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="Database.html">
+                     Database
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <h2>创建数据库和表</h2>
+<p>查看MySQL的<a href="https://dev.mysql.com/doc/refman/5.7/en/data-types.html">数据类型</a>。</p>
+<pre><code class="language-SQL">create database student CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+create table if not exists student (
+    Sno int not null auto_increment primary key,
+    Sname varchar(12) not null,
+    Ssex enum('男', '女'),
+    Sage tinyint null,
+    Sdept char(2) null
+);
+
+
+create table if not exists course (
+    Cno smallint unsigned not null auto_increment primary key,
+    Cname varchar(20) not null,
+    Cpno smallint null,
+    Ccredit tinyint null
+);
+
+
+create table if not exists sc (
+    Sno int not null,
+    Cno smallint not null,
+    Cgrade tinyint null
+);</code></pre>
+<h2>添加数据</h2>
+<pre><code class="language-SQL">insert into student(Sno, Sname, Ssex, Sage, Sdept)
+values
+    (201215121, '李勇', '男', 20, 'CS'),
+    (201215122, '刘晨', '女', 19, 'CS'),
+    (201215123, '王敏', '女', 18, 'MA'),
+    (201215124, '张立', '男', 19, 'IS')
+;
+
+insert into course(Cname, Cpno, Ccredit)
+values
+    ('数据库', 5, 4),
+    ('数学', null, 2),
+    ('信息系统', 1, 4),
+    ('操作系统', 6, 3),
+    ('数据结构', 7, 4),
+    ('数据处理', null, 2),
+    ('PASCAL语言', 6, 4)
+;
+
+insert into sc(Sno, Cno, CGrade)
+values
+    (201215121, 1, 92),
+    (201215121, 2, 85),
+    (201215121, 3, 88),
+    (201215122, 2, 90),
+    (201215122, 3, 80)
+;</code></pre>
+<h2>Select单表查询</h2>
+<h3>结果列</h3>
+<pre><code class="language-SQL">-- 查询经过计算的值
+select Sname, 2019 - Sage as YoB, lower(Sdept) as Sdept from student;
+-- 排重
+select distinct Sno from sc;
+</code></pre>
+<h3>查询满足条件的元组</h3>
+<p>常用的查询条件有: </p>
+<ul>
+<li>比较: =, &gt;, &lt;, &gt;=, &lt;=, !=, &lt;&gt;, !&gt;, !&lt;; Not + 前面的比较运算符</li>
+<li>确定范围（闭区间）: between A and B, not between A and B</li>
+<li>确定集合：in, not in</li>
+<li>字符匹配（%通配任意长度，<em>通配单个字符；若要匹配有'%'和‘</em>’的字符可以使用‘\’进行转义）: like, not like</li>
+<li>空值: is null, is not null</li>
+<li>多重条件: and, or, not</li>
+</ul>
+<pre><code class="language-SQL">select Sname from student where Sdept = 'CS';
+select Sname, Sage from student where Sage &lt; 20;
+select distinct Sno from sc where CGrade &lt; 60;
+select Sname, Sdept, Sage from student where Sage between 20 and 23;
+select Sname, Sdept, Sage from student where Sage not between 20 and 23;
+select Sname, Ssex from student where Sdept in ('CS', 'MA', 'IS');
+select Sname, Ssex from student where Sdept not in ('CS', 'IS');
+select Sname, Sno, Ssex from student where Sname like '刘%';
+select Sno, Cno from sc where CGrade is null;</code></pre>
+<h3>order by 子句</h3>
+<p>order by 子句对查询结果按照指定的一个或多个属性的升序(ASC)或降序(DESC)排序，默认为升序。对于空值，排序顺序的显示次序由具体的系统实现来决定。</p>
+<pre><code class="language-SQL">select * from student order by Sdept, Sage DESC;</code></pre>
+<h3>聚集函数</h3>
+<ul>
+<li>count(*): 统计元组个数</li>
+<li>count([distinct|all] &lt;列名&gt;)：统计列中值的个数</li>
+<li>sum([distinct|all] &lt;列名&gt;)：统计一列值（数值型）的总和</li>
+<li>avg([distinct|all] &lt;列名&gt;)：计算一列值（数值型）的平均值</li>
+<li>max([distinct|all] &lt;列名&gt;)：求一列值中的最大值</li>
+<li>min([distinct|all] &lt;列名&gt;)：求一列值中的最小值</li>
+</ul>
+<p>注意：</p>
+<ol>
+<li>如果有指定<code>distinct</code>则会去重后再计算，默认为<code>all</code>。</li>
+<li>当遇到空值时，除了count(*)，聚集函数都会跳过，只处理非空值</li>
+<li>聚集函数只能用于select子句和group by中的having子句</li>
+</ol>
+<pre><code class="language-SQL">select count(*) from student;
+select count(distinct Sno) from sc;
+select avg(CGrade) from sc where Cno = '1';
+select max(Cgrade) from sc where Cno = '1';
+select sum(Ccredit) from sc, course where Sno='201215121' and sc.Cno = course.Cno;</code></pre>
+<h3>group by 子句</h3>
+<pre><code class="language-SQL">-- 求各个课程号以及相应的选课人数
+select Cno, count(Sno) from sc group by Cno;
+
+-- 查询选修了3门及以上课程的学生学号
+select Sno from sc groupe by Sno having count(*) &gt;= 3;
+
+-- 查询平均成绩大于等于90分的学生学号和平均成绩
+select Sno, avg(CGrade) from sc group by Sno having avg(CGrade) &gt;= 90;</code></pre>
+<p><code>where</code>子句作用于基本表或视图，而<code>having</code>短语作用于组，从中选择满足条件的元组或记录。</p>
+<h2>SQL多表查询</h2>
+<p>常见的连接条件为：</p>
+<ol>
+<li>[<table_1>.]<column_1>&lt;比较运算符&gt;[<table_2>.]<column_2></li>
+<li>[<table_1>.]<column_1>between[<table_2>.]<column_2>and[<table_2>.]<column_3></li>
+</ol>
+<pre><code class="language-SQL">select student.*, sc.* from student, sc where student.Sno = sc.Sno;
+
+-- 同时进行连接和选择查询
+select student.Sno, Sname from student, sc where student.Sno = sc.Sno and sc.Cno = '2' and sc.CGrade &gt; 90;
+
+-- 自身连接
+select f.Cno, s.Cpno from course f, course s where f.Cpno = s.Cno;
+
+-- 外连接
+select student.Sno, Sname, Ssex, Sage, Sdept, Cno, CGrade from student left outer join sc on (student.Sno = sc.Sno);
+
+-- 多表连接
+select student.Sno, Sname, Cname, CGrade from student, sc, course where student.Sno = sc.Sno and sc.Cno = course.Cno;</code></pre>
+<h2>嵌套查询</h2>
+<ul>
+<li>子查询的select语句不能使用order by子句</li>
+<li>Any或All谓词的子查询：(&gt;, &lt;, &gt;=, &lt;=, =, !=, &lt;&gt;)[any|all]</li>
+<li>SQL没有全称量词，涉及全称量词的查询需要转换成存在量词的等价形式来构造查询语句。用逻辑蕴含表达的查询也需要进行转换后查询</li>
+</ul>
+<pre><code class="language-SQL">select Sname from student where Sno in (select Sno from sc where Cno = 2);
+
+-- 找出课程成绩超过自己平均成绩的课程号和学号
+select Sno, Cno from sc x where Cgrade &gt;= ( select avg(Cgrade) from sc y where y.Sno = x.Sno);
+
+select Sname, Sage from student where Sage &lt; any(select Sage from student where Sdept='CS') and Sdept &lt;&gt; 'CS';
+
+-- 查询所有选修了1号课程的学生姓名
+select Sname from student where exists (select * from sc where Sno = student.Sno and Cno = 1)；
+
+-- 查询选修了全部课程的学生姓名
+select Sname from student where not exists
+    (select * from course where not exists
+        (select * from sc where Sno = student.Sno and Cno = course.Cno));
+
+
+-- 查询至少选修了学生201215122选修的全部课程的学生学号
+select distinct Sno from sc x where not exists
+    (select * from sc y where  y.Sno = '201215122' and not exists 
+        (select * from sc z where z.Sno = x.Sno and z.Cno = y.Cno));</code></pre>
+<h2>集合查询</h2>
+<pre><code class="language-SQL">select Sno from sc where Cno = 1 INTERSECT select Sno from sc where Cno = 1
+select * from student where Sdept='CS' UNION select * from student where Sage = 19;
+select * from student where Sdept='CS' EXCEPT select * from student where Sage &lt;= 19;</code></pre>
+<h2>基于派生表的查询</h2>
+<pre><code class="language-SQL">
+select Sno, Cno from sc, (select Sno, avg(Cgrade) as aGrade from sc group by Sno) as avg_sc
+    where sc.Sno = avg_sc.sno and sc.Cgrade &gt;= avg_sc.aGrade;
+
+select sc.Sno, Cno from sc, (select Sno from sc where Cno = 1) as sc1
+    where sc.Sno = sc1.Sno;</code></pre>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
