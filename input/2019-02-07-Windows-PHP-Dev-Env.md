@@ -64,5 +64,8 @@ xdebug.profiler_enable_trigger = 1
 2. 下载并安装[webgrind](https://github.com/jokkedk/webgrind)
 3. 访问`http://localhost/phpScriptsNeedsToBeProfiled.php?XDEBUG_PROFILE=true`
 
+### 可能会遇到的问题
+1. 错误提示`EADDRINUSE`，解决方法是修改php.ini和编辑器debug配置的端口号
+
 
 本文参考了[codewall的文章](https://www.codewall.co.uk/debug-php-in-vscode-with-xdebug/)。图片也是转自同一篇文章。
