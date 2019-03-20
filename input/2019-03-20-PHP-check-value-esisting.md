@@ -8,8 +8,8 @@ tags: PHP
 
 ## 结果对照表
 
-| 	“”	| “apple”	| NULL	| FALSE |	0 |	undefined |
-| ---| ---| ---	| --- |	--- |	--- |
+|    | 	“”	| “apple”	| NULL	| FALSE |	0 |	undefined |
+| ---| ---| ---	| --- |	--- |	--- | -- |
 | empty()	|	TRUE	|	FALSE	|	TRUE	|	TRUE	|	TRUE	|	TRUE	|
 | is_null()	|	FALSE	|	FALSE	|	TRUE	|	FALSE	|	FALSE	|	ERROR	|
 | isset()	|	TRUE	|	TRUE	|	FALSE	|	TRUE	|	TRUE	|	FALSE	|
