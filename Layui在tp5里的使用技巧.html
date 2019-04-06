@@ -1,0 +1,151 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">Layui在tp5里的使用技巧</h1>
+            <p class="post-meta">
+                更新于：2019-04-06 16:39:24
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="PHP.html">
+                    PHP
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="Database.html">
+                     Database
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <p>使用layui开发后台管理前端界面的技巧汇总</p>
+<h2>传递资源的id</h2>
+<p>使用动态表格显示资源列表，用户可以点击查看或修改单个选定的资源，这个时候就需要传递选定资源的id给PHP。通常的方法是：</p>
+<pre><code class="language-JavaScript">    //监听工具条
+    table.on('tool(table-release)', function(obj){
+        var data = obj.data;
+        switch(obj.event){
+            case 'detail':
+                detail({'get_json': 'detail', 'member_id': data.member_id}, "{:url('resource/detail')}?member_id="+data.member_id);
+                break;
+        }
+  });
+
+    //查看明细
+    function detail(aData, url){
+        // 显示表单
+        var view = layer.open({
+            type: 2,
+            title: '明细',
+            content: url,
+            area: ['90%', '90%'],
+            btn: ['关闭'],
+            yes: function(index, layero){
+                layer.close(index);
+                return false;
+            }
+        });
+    }</code></pre>
+<p>在细节页面传递资源id到后端</p>
+<pre><code class="language-HTML"> &lt;div class="layui-fluid"&gt;
+    &lt;h2 id="member_id" style="display:none"&gt;{$member_id}&lt;/h2&gt;
+    &lt;table id="table-release" lay-filter="table-release"&gt;&lt;/table&gt;
+&lt;/div&gt;</code></pre>
+<pre><code class="language-JavaScript">    var ad_table = table.render({
+        elem: '#table-release',
+        url: "{:url('resource/detail')}", 
+        where: {
+            'member_id': $('#member_id').text(),
+            'get_json': 1
+        },
+        cols: [[
+            {field: 'member_id', title: '会员ID', width: 80},
+            {field: 'create_time_title', title: '时间', width: 80},
+            ]],
+        page: true,
+        limit: 20,
+        height: 'full-220',
+        text: {none: '暂无相关数据'},
+        autoSort: false,
+        done:function(){
+
+        }
+    });</code></pre>
+<h3>后台处理代码</h3>
+<pre><code class="language-PHP">      public function detail () {
+        $member_id = $this-&gt;request-&gt;param('member_id');
+        if ($this-&gt;request-&gt;param('get_json')) {
+            $where = ['member_id', '=', $member_id];
+            $list = ReleaseModel::getlist([$where], '*', 'create_time desc');            
+            $this-&gt;ajax_return['data'] = $list['data'];
+            $this-&gt;ajax_return['count'] = $list['count'];
+            return json($this-&gt;ajax_return);
+        } 
+        $this-&gt;assign(['member_id' =&gt; $member_id]);    
+        return $this-&gt;fetch('detail');
+    }</code></pre>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
