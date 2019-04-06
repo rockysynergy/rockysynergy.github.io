@@ -1,0 +1,495 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">使用Laravel和vue构建SPA</h1>
+            <p class="post-meta">
+                更新于：2019-04-06 17:21:02
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="PHP.html">
+                    PHP
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="Web_Dev.html">
+                     Web_Dev
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-two" href="Laravel.html">
+                     Laravel
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <h2>安装</h2>
+<ol>
+<li><code>composer create-project laravel/laravel coolApp --prefer-dist</code></li>
+<li><code>npm install</code> 安装JavaScript依赖</li>
+<li><code>npm install --save-dev vue-axios vue-loader vue-router vue-template-compiler</code> 安装vue的相关组件</li>
+</ol>
+<h2>vue前端相关</h2>
+<pre><code class="language-JavaScript">// resources/js/components/App.vue
+&lt;template&gt;
+    &lt;div class="container"&gt;
+        &lt;div&gt;
+            &lt;transition name="fade"&gt;
+                &lt;router-view&gt;&lt;/router-view&gt;
+            &lt;/transition&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-active {
+      opacity: 0
+    }
+&lt;/style&gt;
+
+&lt;script&gt;
+
+    export default{
+    }
+&lt;/script&gt;
+```JavaScript
+
+```JavaScript
+// resources/js/components/CourseCreate.vue
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Create An Course&lt;/h1&gt;
+    &lt;form v-on:submit.prevent="addCourse"&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-md-6"&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label&gt;Course Title:&lt;/label&gt;
+            &lt;input type="text" class="form-control" v-model="Course.title"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-6"&gt;
+            &lt;div class="form-group"&gt;
+              &lt;label&gt;Course Alias:&lt;/label&gt;
+              &lt;input type="text" class="form-control col-md-6" v-model="Course.alias" /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-6"&gt;
+            &lt;div class="form-group"&gt;
+              &lt;label&gt;Course Goal:&lt;/label&gt;
+              &lt;input type="text" class="form-control col-md-6" v-model="Course.goal" /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;&lt;br /&gt;
+        &lt;div class="form-group"&gt;
+          &lt;button class="btn btn-primary"&gt;Add Course&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  export default {
+    data(){
+        return{
+          Course:{}
+        }
+    },
+    methods: {
+      addCourse(){
+        let uri = 'http://orqdev.in/api/courses';
+        this.axios.post(uri, this.Course).then((response) =&gt; {
+          this.$router.push({name: 'CourseDisplay'})
+        })
+    }
+  }
+}
+&lt;/script&gt;</code></pre>
+<pre><code class="language-JavaScript">// resources/js/components/CourseDisplay.vue
+&lt;template&gt;
+    &lt;div&gt;
+        &lt;h1&gt;Courses&lt;/h1&gt;
+
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-10"&gt;&lt;/div&gt;
+          &lt;div class="col-md-2"&gt;
+            &lt;router-link :to="{ name: 'CourseCreate' }" class="btn btn-primary"&gt;Create Course&lt;/router-link&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;&lt;br /&gt;
+
+        &lt;table class="table table-hover"&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;td&gt;ID&lt;/td&gt;
+                &lt;td&gt;Course Title&lt;/td&gt;
+                &lt;td&gt;Course Alias&lt;/td&gt;
+                &lt;td&gt;Course Goal&lt;/td&gt;
+                &lt;td&gt;Actions&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+
+            &lt;tbody&gt;
+                &lt;tr v-for="Course in Courses" v-bind:key="Course.id"&gt;
+                    &lt;td&gt;{{ Course.id }}&lt;/td&gt;
+                    &lt;td&gt;{{ Course.title }}&lt;/td&gt;
+                    &lt;td&gt;{{ Course.alias }}&lt;/td&gt;
+                    &lt;td&gt;{{ Course.goal }}&lt;/td&gt;
+                    &lt;td&gt;&lt;router-link :to="{name: 'CourseEdit', params: { id: Course.id }}" class="btn btn-primary"&gt;Edit&lt;/router-link&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;button class="btn btn-danger" v-on:click="deleteCourse(Course.id)"&gt;Delete&lt;/button&gt;&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+
+    export default {
+        data(){
+            return{
+                Courses: []
+            }
+        },
+
+        created: function()
+        {
+            this.fetchCourses();
+        },
+
+        methods: {
+            fetchCourses()
+            {
+                let uri = 'http://orqdev.in/api/courses';
+                this.axios.get(uri).then((response) =&gt; {
+                this.Courses = response.data;
+              });
+            },
+            deleteCourse(id)
+            {
+                let uri = `http://orqdev.in/api/courses/${id}`;
+                this.Courses = this.Courses.filter(course =&gt; course.id != id);
+                this.axios.delete(uri);
+            }
+        }
+    }
+&lt;/script&gt;</code></pre>
+<pre><code class="language-JavaScript">// resources/js/components/CourseEdit.vue
+&lt;template&gt;
+    &lt;div&gt;
+        &lt;h1&gt;Update Course&lt;/h1&gt;
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-10"&gt;&lt;/div&gt;
+          &lt;div class="col-md-2"&gt;&lt;router-link :to="{ name: 'CourseDisplay' }" class="btn btn-success"&gt;Return to Courses&lt;/router-link&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;form v-on:submit.prevent="updateCourse"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label&gt;Course Title&lt;/label&gt;
+                &lt;input type="text" class="form-control" v-model="Course.title"&gt;
+            &lt;/div&gt;
+
+            &lt;div class="form-group"&gt;
+                &lt;label name="product_price"&gt;Course Alias&lt;/label&gt;
+                &lt;input type="text" class="form-control" v-model="Course.alias"&gt;
+            &lt;/div&gt;
+
+            &lt;div class="form-group"&gt;
+                &lt;label name="product_price"&gt;Course Goal&lt;/label&gt;
+                &lt;input type="text" class="form-control" v-model="Course.goal"&gt;
+            &lt;/div&gt;
+
+            &lt;div class="form-group"&gt;
+                &lt;button class="btn btn-primary"&gt;Update&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+
+    export default{
+        data(){
+            return{
+                Course:{}
+            }
+        },
+
+        created: function(){
+            this.getCourse();
+        },
+
+        methods: {
+            getCourse()
+            {
+                let uri = `http://orqdev.in/api/courses/${this.$route.params.id}/edit`;
+                this.axios.get(uri).then((response) =&gt; {
+                    this.Course = response.data;
+                });
+            },
+
+            updateCourse()
+            {
+              let uri = 'http://orqdev.in/api/courses/'+this.$route.params.id;
+                this.axios.patch(uri, this.Course).then((response) =&gt; {
+                  this.$router.push({name: 'CourseDisplay'});
+                });
+            }
+        }
+    }
+&lt;/script&gt;</code></pre>
+<pre><code class="language-JavaScript">// resources/js/app.js
+
+import Vue from 'vue';
+
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+import VueAxios from 'vue-axios';
+import axios from 'axios';
+Vue.use(VueAxios, axios);
+
+import App from './components/App';
+import CourseCreate from './components/CourseCreate.vue';
+import CourseDisplay from './components/CourseDisplay.vue';
+import CourseEdit from './components/CourseEdit.vue';
+
+const routes = [
+    {
+        name: 'CourseCreate',
+        path: '/courses/create',
+        component: CourseCreate
+    },
+    {
+        name: 'CourseDisplay',
+        path: '/',
+        component: CourseDisplay
+    },
+    {
+        name: 'CourseEdit',
+        path: '/courses/edit/:id',
+        component: CourseEdit
+    }
+]
+
+const router = new VueRouter({ mode: 'history', routes: routes});
+new Vue(Vue.util.extend({ router }, App)).$mount('#app');</code></pre>
+<h2>后端相关</h2>
+<ol>
+<li><code>php artisan make:model Course -m</code> </li>
+<li>修改migration文件，然后<code>php artisan migrate</code></li>
+<li>添加<code>Route::resource('courses', 'CourseController');</code> 到routes/api.php</li>
+<li><code>php artisan make:controller CourseController --resource</code></li>
+</ol>
+<pre><code class="language-PHP">namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Domain\Repository\Course;
+
+class CourseController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $courses = Course::all();
+        return response()-&gt;json($courses);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $course = new Course([
+            'title' =&gt; $request-&gt;get('title'),
+            'alias' =&gt; $request-&gt;get('alias'),
+            'goal' =&gt; $request-&gt;get('goal')
+        ]);
+
+        $course-&gt;save();
+        return response()-&gt;json('Successfully added');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $course = Course::find($id);
+        return response()-&gt;json($course);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $course = Course::find($id);
+        $course-&gt;title = $request-&gt;get('title');
+        $course-&gt;alias = $request-&gt;get('alias');
+        $course-&gt;goal = $request-&gt;get('goal');
+        $course-&gt;save();
+
+        return response()-&gt;json('Successfully updated');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $course = Course::find($id);
+        $course-&gt;delete();
+
+        return response()-&gt;json('Successfully Deleted');
+    }
+}</code></pre>
+<h3>vue使用的route</h3>
+<ol>
+<li>在<code>routes/web.php</code>中添加<code>Route::get('/{any}', 'SpaController@index')-&gt;where('any', '.*');</code></li>
+<li><code>php artisan make:controller SpaController</code></li>
+</ol>
+<pre><code class="language-PHP">namespace App\Http\Controllers;
+
+// use Illuminate\Http\Request;
+
+class SpaController extends Controller
+{
+    public function index()
+    {
+        return view('spa');
+    }
+}</code></pre>
+<ol start="3">
+<li>创建<code>views/spa.blade.php</code></li>
+</ol>
+<pre><code class="language-HTML">&lt;!doctype html&gt;
+&lt;html lang="{{ app()-&gt;getLocale() }}"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+        &lt;title&gt;Laravel Vue CRUD Application&lt;/title&gt;
+        &lt;link href="{{asset('css/app.css')}}" rel="stylesheet" type="text/css"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id="app"&gt;
+        &lt;/div&gt;
+         &lt;script&gt;
+           window.Laravel = &lt;?php echo json_encode([
+               'csrfToken' =&gt; csrf_token(),
+                    ]); ?&gt;
+          &lt;/script&gt;
+        &lt;script src="{{asset('js/app.js')}}"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
