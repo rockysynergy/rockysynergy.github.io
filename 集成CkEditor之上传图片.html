@@ -1,0 +1,181 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">集成CkEditor之上传图片</h1>
+            <p class="post-meta">
+                更新于：2019-04-30 12:08:16
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="PHP.html">
+                    PHP
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="Web_Dev.html">
+                     Web_Dev
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-two" href="Laravel.html">
+                     Laravel
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-three" href="Ckeditor.html">
+                     Ckeditor
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <h2>准备</h2>
+<ol>
+<li>从<a href="https://ckeditor.com/ckeditor-4/download/">下载安装ckeditor</a></li>
+<li>修改服务器有关文件上传大小的设置，对于Apache来讲，找到http.conf然后修改以下设置<blockquote>
+<p>post_max_size = 100M
+upload_max_filesize = 100M</p>
+</blockquote>
+</li>
+</ol>
+<h2>CKeditor配置</h2>
+<ol>
+<li>引入ckeditor.js</li>
+<li>在使用ckeditor的地方进行以下配置</li>
+</ol>
+<pre><code class="language-JavaScript">        &lt;script&gt;
+        CKEDITOR.replace( 'description', {
+            height:300,
+            fileTools_requestHeaders : {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            isFileUploadSupported : true,
+            filebrowserUploadUrl : '/create/uploadFile',
+            language : 'zh-cn',
+        });
+        &lt;/script&gt;</code></pre>
+<h2>Laravel配置与代码</h2>
+<ol>
+<li>添加route</li>
+</ol>
+<pre><code class="language-PHP">    // 文件上传路由
+    Route::post('/create/uploadFile','ProductController@uploadFile');
+    // 从word中复制内容时，自动上传图片路由
+    Route::post('/create/uploadFile&amp;responseType=json','ProductController@uploadFile');
+    Route::get('/home', 'HomeController@index')-&gt;name('home');</code></pre>
+<ol start="2">
+<li>创建文件存储链接<code>php artisan storage:link</code></li>
+<li>添加PHP上传文件的代码<pre><code class="language-PHP">/**
+  * 处理上传文件
+  * https://blog.csdn.net/koastal/article/details/80668260
+  */
+ public function uploadFile($postFile='upload', Request $request){
+     $allowedPrefix = ['jpg','jpeg','png','doc','docx','xls','xlsx','zip','ppt','pptx','rar','pdf'];
+     //检查文件是否上传成功
+     if(!$request-&gt;hasFile($postFile) || !$request-&gt;file($postFile)-&gt;isValid()){
+         return $this-&gt;CKEditorUploadResponse(0,'文件上传失败');
+     }
+     $extension = $request-&gt;file($postFile)-&gt;extension();
+     $size = $request-&gt;file($postFile)-&gt;getSize();
+     $filename = $request-&gt;file($postFile)-&gt;getClientOriginalName();
+     //检查后缀名
+     if(!in_array($extension, $allowedPrefix)){
+         return $this-&gt;CKEditorUploadResponse(0,'文件类型不合法');
+     }
+     //检查大小
+     if($size &gt; 10*1024*1024){
+         return $this-&gt;CKEditorUploadResponse(0,'文件大小超过限制');
+     }
+     //保存文件
+     $path = '/storage/'.$request-&gt;file($postFile)-&gt;store('images');
+     return $this-&gt;CKEditorUploadResponse(1,'',$filename,$path);
+ }
+ /**
+  * CKEditor 上传文件的标准返回格式
+  * @param string $uploaded [description]
+  * @param string $error    [description]
+  * @param string $filename [description]
+  * @param string $url      [description]
+  */
+ private function CKEditorUploadResponse($uploaded,$error='',$filename='',$url=''){
+     return [
+         "uploaded" =&gt; $uploaded,
+         "fileName" =&gt; $filename,
+         "url" =&gt; $url,
+         "error" =&gt; [
+             "message" =&gt; $error
+         ]
+     ];
+ }</code></pre>
+</li>
+</ol>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
