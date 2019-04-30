@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">HTML和CSS技巧汇总</h1>
             <p class="post-meta">
-                更新于：2019-04-30 13:46:15
+                更新于：2019-04-30 13:50:18
                 
 
     
@@ -103,6 +103,13 @@
 <li>给p或者其它包含文字的元素设置窄的宽带</li>
 <li>使用CSS<code>writing-mode: tb-rl;</code></li>
 </ol>
+<h3>替换select元素默认的下拉箭头</h3>
+<pre><code class="language-CSS">select {
+   -webkit-appearance: none; 
+   -moz-appearance: none;
+   appearance: none;       /* remove default arrow */
+   background-image: url(...);   /* add custom arrow */
+}</code></pre>
     </article>
 
                 </div>
