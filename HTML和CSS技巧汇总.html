@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">HTML和CSS技巧汇总</h1>
             <p class="post-meta">
-                更新于：2019-04-30 13:50:18
+                更新于：2019-05-02 14:40:17
                 
 
     
@@ -110,6 +110,36 @@
    appearance: none;       /* remove default arrow */
    background-image: url(...);   /* add custom arrow */
 }</code></pre>
+<h3>使用jquery animate 实现简单的走马灯</h3>
+<p>这是实现纵向走马灯的JavaScript代码，横向的只需要改成<code>margin-left</code>即可</p>
+<pre><code class="language-JavaScript">
+   let scroll = function scroll() {
+       $(".v_carousel-holder ul").animate({"margin-top":"-120px"}, 1000, 'swing', function() {
+           $(".v_carousel-holder ul li").slice(0, 4).appendTo($(".v_carousel-holder ul"));
+           $(".v_carousel-holder ul").css({"margin-left": 0});
+       });
+   }
+   var scrolling = setInterval(scroll, 1000);
+``` JavaScript
+
+````CSS
+ .v_carousel-holder {
+     height: 300px;
+     overflow: hidden;
+ }
+
+ .v_carousel-holder ul {
+     width: 100%;
+     height: 100%;
+     margin: 0;
+     padding: 0;
+ }
+
+ .v_carousel-holder ul li {
+     display: block;
+     margin: 5px;
+ }
+```CSS</code></pre>
     </article>
 
                 </div>
