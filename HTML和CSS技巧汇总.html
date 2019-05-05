@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">HTML和CSS技巧汇总</h1>
             <p class="post-meta">
-                更新于：2019-05-02 14:40:17
+                更新于：2019-05-05 20:25:20
                 
 
     
@@ -112,8 +112,7 @@
 }</code></pre>
 <h3>使用jquery animate 实现简单的走马灯</h3>
 <p>这是实现纵向走马灯的JavaScript代码，横向的只需要改成<code>margin-left</code>即可</p>
-<pre><code class="language-JavaScript">
-   let scroll = function scroll() {
+<pre><code class="language-JavaScript">   let scroll = function scroll() {
        $(".v_carousel-holder ul").animate({"margin-top":"-120px"}, 1000, 'swing', function() {
            $(".v_carousel-holder ul li").slice(0, 4).appendTo($(".v_carousel-holder ul"));
            $(".v_carousel-holder ul").css({"margin-left": 0});
@@ -139,7 +138,94 @@
      display: block;
      margin: 5px;
  }
-```CSS</code></pre>
+```CSS
+
+
+## 表单填写完成后才能提交
+```JavaScript
+   $(document).ready(function() {
+        let checkForm = function checkForm() {
+            // 验证表单是否填完
+            let i = 0;
+            let isFinished = function isFinished() {
+                let empty = false;
+                $('#information_form input').each(function() {
+                    if ($(this).val() == '') {
+                        empty = true;
+                    }
+                });
+
+                if (!empty) {
+                    $('#pay_button').removeClass('disabled');
+                } else {
+                    $('#pay_button').addClass('disabled');
+                }
+
+            };
+
+            // 验证数据的有效性
+            $('#information_form input').on('focus', function() {
+                $(this).removeClass('error');
+            });
+
+            $('#address').on('keyup', function() {
+                let client_address = $.trim($(this).val());
+                if (client_address.length &lt; 3) {
+                    $(this).addClass('error');
+                    $('#pay_button').addClass('disabled');
+                } else {
+                    $(this).removeClass('error');
+                    isFinished();
+                }
+            });
+            $('#name').on('keyup', function() {
+                let client_name = $.trim($(this).val());
+                let pattern = /^.{2,10}$/;
+                if (!pattern.test(client_name)) {
+                    $(this).addClass('error');
+                    $('#pay_button').addClass('disabled');
+                } else {
+                    $(this).removeClass('error');
+                    isFinished();
+                }
+            });
+            $('#phone').on('keyup', function() {
+                let client_phone = $.trim($(this).val());
+                let pattern = /^1[34578]\d{9}$/; 
+                if (!pattern.test(client_phone)) {
+                    $(this).addClass('error');
+                    $('#pay_button').addClass('disabled');
+                } else {
+                    $(this).removeClass('error');
+                    isFinished();
+                }
+            });
+        };
+        checkForm();
+
+        $('#pay_button').on('click', function() {
+            let order_info = {};
+            $('#information_form input').each(function() {
+                let key = $(this).attr("name");
+                order_info[key] = $(this).val();
+            });
+            if ($('#information_form').data('type') == 'seckill') {
+                order_info.store = $('#store').val();
+            }
+            console.log(order_info);
+            $.ajax({
+               type: "POST",
+               headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+               url: '/make_seckill_order',
+               data: order_info,
+               success: function( msg ) {
+                   alert( msg );
+               }
+            });
+        });
+    });</code></pre>
     </article>
 
                 </div>
