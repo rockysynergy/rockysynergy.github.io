@@ -1,0 +1,192 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A blog from rockyou">
+    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <!--<![endif]-->
+    
+    
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="./css/main-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+            <link rel="stylesheet" href="./css/main.css">
+        <!--<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div id="layout" class="pure-g">
+            <div class="sidebar pure-u-1 pure-u-md-1-4">
+                <div class="header">
+                    <h1 class="brand-title">Rocky's Blog</h1>
+                    <h2 class="brand-tagline">Coding Web applications to change lives!</h2>
+        
+                    <nav class="nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="pure-button" href="./index.html">主页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="pure-button" href="./about.html">简介</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        
+            <div class="content pure-u-1 pure-u-md-3-4">
+                <div>
+                    
+    <article>
+        <header class="post-header">
+            <h1 class="post-title">Laravel框架下使用领域驱动模型设计</h1>
+            <p class="post-meta">
+                更新于：2019-05-26 13:57:27
+                
+
+    
+            
+                <a class="post-category post-category-zero" href="PHP.html">
+                    PHP
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-one" href="Laravel.html">
+                     Laravel
+                </a>
+            
+        
+
+    
+            
+                <a class="post-category post-category-two" href="DDD.html">
+                     DDD
+                </a>
+            
+        
+
+            </p>
+        </header>
+        <p>领域驱动的模型设计帮助我们使用面向对象的编程范式以及设计模式等技术，从而确保程序的稳定性以及可扩展性。本文对在Laravel下使用领域驱动模型设计的几个关键点进行初步总结。</p>
+<h1>目录结构</h1>
+<blockquote>
+<p>|- app
+|- Domain
+|- Model
+|- Repository
+|- Service</p>
+</blockquote>
+<h1>工厂方法(Factory Method)</h1>
+<p>工厂方法把从数据库获取的信息转化成领域模型对象，进行业务逻辑的处理。</p>
+<pre><code class="language-PHP">namespace App\Domain\Factory;
+
+class ModelFactory {
+    public static function make(string $cls, array $data, array $map=[]):object
+    {
+        $obj = new $cls();
+        foreach ($data as $k=&gt;$v) {
+            $k = self::toCamelcase($k);
+            $setter = 'set'.ucfirst($k);
+            if (method_exists($obj, $setter)) {
+                $obj-&gt;$setter($v);
+            }
+        }
+
+        foreach ($map as $field=&gt;$vk) {
+            $setter = 'set'.ucfirst($field);
+            if (method_exists($obj, $setter)) {
+                $obj-&gt;$setter($data[$vk]);
+            }
+        }
+
+        if (\method_exists($obj, 'postCreation')) {
+            $obj-&gt;postCreation();
+        }
+        return $obj;
+    }
+
+    protected static function toCamelcase(string $str):string
+    {
+        $w = explode('_', $str);
+
+        $r = '';
+        foreach ($w as $m) {
+            $r .= ucFirst($m);
+        }
+        return $r;
+    }
+}</code></pre>
+<h1>仓库(Repository)</h1>
+<p>使用Eloquent Model作为DDD的仓库，这样可以充分利用Laravel框架的代码</p>
+<ol>
+<li>
+<p>数据库字段名为<code>field_name</code>，而领域模型的字段名为<code>fieldName</code>，另外还有<code>setFieldName</code>以及<code>getFieldName</code>方法</p>
+</li>
+<li>
+<p>处理完业务逻辑把数据存储到数据库的时候需要把领域模型转化成<code>Eloquent Model</code></p>
+</li>
+<li>
+<p>从仓库取出数据以后需要使用上面的工厂方法把它们转化成领域模型对象处理领域逻辑。</p>
+<pre><code class="language-PHP">abstract class AbstractRepository  extends Model
+{
+ /**
+  * Save order to db
+  */
+ protected function saveIt(ModelInterface $modelObj):void
+ {
+     $old = $this-&gt;find($modelObj-&gt;getId());
+     $obj = $old ? $old : $this;
+     $obj = $this-&gt;setValue($obj, $modelObj);
+     $obj-&gt;save();
+ }
+
+ protected function setValue(Model $target, ModelInterface $source):Model
+ {
+     $fields = DB::connection()-&gt;getSchemaBuilder()-&gt;getColumnListing($target-&gt;getTable());
+     foreach ($fields as $field) {
+         $getter = 'get'.ucfirst(self::toCamelcase($field));
+         if (\method_exists($source, $getter)) {
+             if ($source-&gt;$getter()) $target-&gt;$field = $source-&gt;$getter();
+         }
+     }
+
+     return $target;
+ }
+
+ protected static function toCamelcase(string $str):string
+ {
+     $w = explode('_', $str);
+
+     $r = '';
+     foreach ($w as $m) {
+         $r .= ucFirst($m);
+     }
+     return $r;
+ }
+}</code></pre>
+</li>
+</ol>
+    </article>
+
+                </div>
+            </div>
+    </div>
+</body>
