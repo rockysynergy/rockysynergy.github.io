@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">Java JDBC练习</h1>
             <p class="post-meta">
-                更新于：2019-10-13 17:34:36
+                更新于：2019-10-13 20:19:01
                 
 
     
@@ -159,6 +159,73 @@
       helloword();
     }
   }</code></pre>
+<h2>进阶</h2>
+<h3>游标</h3>
+<ol>
+<li>过滤条件太弱，导致读出太多数据</li>
+<li>读取数据库表中所有的记录</li>
+</ol>
+<p>这些问题会导致内存溢出异常。可以使用游标来解决这个问题。具体步骤</p>
+<ol>
+<li>`jdbc:mysql://<IP>:<Port>/<database>?useCursorFetch=true</li>
+<li>使用PreparedStatement.setFetchSize();</li>
+</ol>
+<pre><code class="language-Java">  public static void fetchData() throws ClassNotFoundException {
+      Connection conn = null;
+      PreparedStatement ptmt = null;
+      ResultSet rs = null;
+
+      // 装入驱动程序
+      Class.forName(JDBC_DRIVER);
+
+      // 建立数据库连接
+      try {
+        DB_URL += "?useCursorFetch=true";
+        conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+        // 3.执行SQL语句
+        ptmt = conn.prepareStatement("select user_name from user");
+        ptmt.setFetchSize(1);
+        rs = ptmt.executeQuery();
+
+        // 4.获取执行结果
+        while (rs.next()) {
+          System.out.println("Hello " + rs.getString("user_name"));
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } finally {
+        //5.清理环境
+        try {
+          if (conn != null) conn.close();
+          if (ptmt != null) ptmt.close();
+          if (rs != null) rs.close();
+        } catch (SQLException e) {
+          // ignore
+        }
+      }
+    }</code></pre>
+<h3>流方式读取</h3>
+<p><code>大对象</code>即使一条记录也会造成内存溢出异常。</p>
+<pre><code class="language-Java">// 其它代码
+while (rs.next()) {
+  InputStream in = rs.getBinaryStream("Article");
+  File f = new File(FILE_URL);
+  OutputStream out = null;
+  out = new FileOutputStream(f);
+  int temp = 0;
+  while ((temp = in.read()) != -1) {
+    out.write(temp);
+  }
+  in.close();
+  out.close();
+}
+// 其它代码</code></pre>
+<h3>批处理</h3>
+<p>一次插入大量数据时需要使用批处理，Statement的<code>addBatch(), executeBatch(), clearBatch()</code>。</p>
+<h3>编码</h3>
+<p><code>show variables like '%character%';</code>查看<code>character_set_server</code>和<code>character_set_database</code>。<code>show create table user:</code>查看<code>DEFAULT CHARSET</code>和列级别<code>CHARACTER SET</code>
+<code>DB_URL = DB_URL + characterEncoding=utf8</code></p>
     </article>
 
                 </div>
