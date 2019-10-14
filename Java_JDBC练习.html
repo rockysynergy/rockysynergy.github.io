@@ -56,7 +56,7 @@
         <header class="post-header">
             <h1 class="post-title">Java JDBC练习</h1>
             <p class="post-meta">
-                更新于：2019-10-13 20:19:01
+                更新于：2019-10-14 21:22:17
                 
 
     
@@ -86,146 +86,92 @@
             </p>
         </header>
         <h2>准备</h2>
-<ul>
-<li>安装Mysql Server</li>
-<li>下载Mysql connector (mysql-connector-java-8.0.17.zip)[<a href="https://dev.mysql.com/downloads/connector/j/5.1.html">https://dev.mysql.com/downloads/connector/j/5.1.html</a>]</li>
-<li>创建数据库和数据库表</li>
-</ul>
-<h2>练习使用</h2>
-<ol>
-<li>使用Ecllipse创建maven quickstart项目（或者普通项目）</li>
-<li>引入mysql-connector. 
-2.1 <code>maven项目</code>可以使用以下依赖</li>
-</ol>
-<pre><code class="language-XML">    &lt;dependency&gt;
-        &lt;groupId&gt;mysql&lt;/groupId&gt;
-        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-        &lt;version&gt;8.0.16&lt;/version&gt;
+<p>下载jar包添加到buildpath, 如果使用<code>maven</code>，则添加以下配置到pom.xml</p>
+<pre><code class="language-XML">    &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+        &lt;artifactId&gt;commons-dbcp2&lt;/artifactId&gt;
+        &lt;version&gt;2.6.0&lt;/version&gt;
     &lt;/dependency&gt;</code></pre>
-<p>2.2 如果使用下载的connector。File-&gt;import-&gt;File System 导入jar包，然后右键单击刚刚导入的jar包-&gt;build path -&gt; Add to Build Path。 另外也可以右键单击项目-&gt; Properties -&gt; Java Build Path -&gt; Libraries-&gt; Add External JARs</p>
-<ol start="3">
-<li><code>Java</code>代码</li>
-</ol>
-<pre><code class="language-Java">  package com.kmenpin.jdbc.practice;
+<h2><code>Java</code>代码</h2>
+<pre><code class="language-Java">    package com.kmenpin.jdbc.practice;
 
-  import java.sql.Connection;
-  import java.sql.DriverManager;
-  import java.sql.ResultSet;
-  import java.sql.SQLException;
-  import java.sql.Statement;
+    import java.sql.Connection;
+    import java.sql.ResultSet;
+    import java.sql.SQLException;
+    import java.sql.Statement;
 
-  public class HelloJDBC {
-  //    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-  //    static final String DB_URL = "jdbc:mysql://localhost:3306/jw_learn?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;serverTimezone=GMT";
-    // 解决timezone异常的方法 1. 使用上面的DB_URL 2. 使用下面的DB_URL然后在MYSQL server使用set global time_zone = "+8:00";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/jw_learn";
-    static final String USER = "root";
-    static final String PASSWORD = "123456";
+    import org.apache.commons.dbcp2.BasicDataSource;
 
-    public static void helloword() throws ClassNotFoundException {
-      Connection conn = null;
-      Statement stmt = null;
-      ResultSet rs = null;
+    public class DBCPLearn {
 
-      // 1.装载驱动程序
-      Class.forName(JDBC_DRIVER);
-      // 2. 建立数据库连接
-      try {
-        conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-        // 3. 执行SQL语句
-        stmt = conn.createStatement();
-        rs = stmt.executeQuery("select user_name from user");
+        public static BasicDataSource ds = null;
 
-        //4.获取结果
-        while(rs.next()) {
-          System.out.println("Hellow"+rs.getString("user_name"));
+        static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+        static String DB_URL = "jdbc:mysql://localhost:3306/jw_learn";
+        static final String USER = "root";
+        static final String PASSWORD = "MYSQLPassword";
+
+        public static void dbpoolInit() {
+            ds = new BasicDataSource();
+            ds.setUrl(DB_URL);
+            ds.setDriverClassName(JDBC_DRIVER);
+            ds.setUsername(USER);
+            ds.setPassword(PASSWORD);
         }
-      } catch (SQLException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } finally {
-        try {
-          if (conn != null) conn.close();
-          if (stmt != null) stmt.close();
-          if (rs != null) rs.close();
-        } catch (SQLException e) {
-          // ignore
+
+        public void dBCPLearn() {
+            Connection conn = null;
+            Statement stmt = null;
+            ResultSet rs = null;
+
+            try {
+                conn = ds.getConnection();
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("select * from user");
+
+                while (rs.next()) {
+                    System.out.println(rs.getString("user_name"));
+                }
+            } catch(SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (conn != null) conn.close();
+                    if (stmt != null ) stmt.close();
+                    if (rs != null ) rs.close();
+                } catch (SQLException e1) {
+                    // ignore
+                }
+            }
         }
-      }
-    }
 
-    public static void main(String[] args) throws ClassNotFoundException {
-      helloword();
-    }
-  }</code></pre>
-<h2>进阶</h2>
-<h3>游标</h3>
-<ol>
-<li>过滤条件太弱，导致读出太多数据</li>
-<li>读取数据库表中所有的记录</li>
-</ol>
-<p>这些问题会导致内存溢出异常。可以使用游标来解决这个问题。具体步骤</p>
-<ol>
-<li>`jdbc:mysql://<IP>:<Port>/<database>?useCursorFetch=true</li>
-<li>使用PreparedStatement.setFetchSize();</li>
-</ol>
-<pre><code class="language-Java">  public static void fetchData() throws ClassNotFoundException {
-      Connection conn = null;
-      PreparedStatement ptmt = null;
-      ResultSet rs = null;
-
-      // 装入驱动程序
-      Class.forName(JDBC_DRIVER);
-
-      // 建立数据库连接
-      try {
-        DB_URL += "?useCursorFetch=true";
-        conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-
-        // 3.执行SQL语句
-        ptmt = conn.prepareStatement("select user_name from user");
-        ptmt.setFetchSize(1);
-        rs = ptmt.executeQuery();
-
-        // 4.获取执行结果
-        while (rs.next()) {
-          System.out.println("Hello " + rs.getString("user_name"));
+        public static void main(String[] args) {
+            dbpoolInit();
+            new DBCPLearn().dBCPLearn();
         }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      } finally {
-        //5.清理环境
-        try {
-          if (conn != null) conn.close();
-          if (ptmt != null) ptmt.close();
-          if (rs != null) rs.close();
-        } catch (SQLException e) {
-          // ignore
-        }
-      }
     }</code></pre>
-<h3>流方式读取</h3>
-<p><code>大对象</code>即使一条记录也会造成内存溢出异常。</p>
-<pre><code class="language-Java">// 其它代码
-while (rs.next()) {
-  InputStream in = rs.getBinaryStream("Article");
-  File f = new File(FILE_URL);
-  OutputStream out = null;
-  out = new FileOutputStream(f);
-  int temp = 0;
-  while ((temp = in.read()) != -1) {
-    out.write(temp);
-  }
-  in.close();
-  out.close();
-}
-// 其它代码</code></pre>
-<h3>批处理</h3>
-<p>一次插入大量数据时需要使用批处理，Statement的<code>addBatch(), executeBatch(), clearBatch()</code>。</p>
-<h3>编码</h3>
-<p><code>show variables like '%character%';</code>查看<code>character_set_server</code>和<code>character_set_database</code>。<code>show create table user:</code>查看<code>DEFAULT CHARSET</code>和列级别<code>CHARACTER SET</code>
-<code>DB_URL = DB_URL + characterEncoding=utf8</code></p>
+<h2>高级配置</h2>
+<ul>
+<li>
+<p><code>setInitialSize()</code>：在应用程序启动时预先创建的连接数</p>
+</li>
+<li>
+<p><code>setMaxTotal()</code>:连接池最大连接数</p>
+</li>
+<li>
+<p><code>setMaxWaitMillis()</code></p>
+</li>
+<li>
+<p><code>setMaxIdle()</code></p>
+</li>
+<li>
+<p><code>setMinIdel()</code></p>
+</li>
+<li>
+<p>setTestWhileIdle(True), setMinEvictableIdleTimeMillis(), setTimeBetweenEcictionRunsMillis()</p>
+</li>
+</ul>
     </article>
 
                 </div>
