@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Laravel和MySQL使用utf8mb4字符编码
-tags: Learn, Database
+tags: Learn, Database, Laravel
 ---
 
 小程序昵称使用的字符有可能会超出BMP的编码范围，插入数据库时会产生错误`General error: 1366 Incorrect string value: '\\xF0\\x9F\\x92\\x93' for column 'nicknam`
